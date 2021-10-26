@@ -18,12 +18,16 @@
 //   );
 
 const express = require("express");
+require("dotenv").config();
 const app = express();
 
 app.use(express.static("public"))
-app.get("/",  (req, res) => {
+app.get("/", (req, res) => {
     res.send("<h1>Hello World!</h1>")
-  })
+})
+app.get("/*", (req, res) => {
+    res.send("<h1>Hello World!</h1>")
+})
 
 app.listen(process.env.PORT || 3000, () => {
     console.log("Listening on http://localhost:3000/")
