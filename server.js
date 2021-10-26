@@ -19,10 +19,11 @@
 
 const app = require("express")();
 
-app.get("/", (req, res) => {
-    res.send("coucou les cop1");
-})
+app.use(express.static("public"))
+app.get("/",  (req, res) => {
+    res.send("<h1>Hello World!</h1>")
+  })
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log("Listening on http://localhost:3000/")
 })
