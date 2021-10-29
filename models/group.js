@@ -4,9 +4,8 @@ const Schema = mongoose.Schema;
 const groupSchema = new Schema({
   manager: mongoose.Types.ObjectId,
   students: [mongoose.Types.ObjectId],
-  sprints: [
-    mongoose.Types.ObjectId,
-  ],
+  sprints: [mongoose.Types.ObjectId],
+  labels: [String],
 });
 
 const Group = mongoose.model("Group", groupSchema);

@@ -72,8 +72,9 @@ router.post("/deleteuser", async (req, res) => {
 });
 
 router.post("/deleteusers", async (req, res) => {
-  await User.deleteMany();
-  res.status(201);
+  // await User.deleteMany();
+  // res.status(201);
+  res.status(200).send("<span>Not implemented yet...</span>");
 });
 
 module.exports = router;

@@ -1,13 +1,21 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 
-// Routes import
+// Middelware
+app.use(express.json());
+app.use(express.static("public"));
+
+// API routes import
 const userRoutes = require("./routes/userRoutes");
 const groupRoutes = require("./routes/groupRoutes");
 
-app.use(express.json());
-app.use(express.static("public"));
+// API Routes
+app.use("/api/user", userRoutes);
+app.use("/api/group", groupRoutes);
+
+// Root query
 app.get("/", async (req, res) => {
   res.send(
     "<h1>API_QUALITE_DEV</h1>\
@@ -17,12 +25,12 @@ app.get("/", async (req, res) => {
   );
 });
 
-app.use("/api", userRoutes);
-app.use("/api", groupRoutes);
-
+// Connection to MongoDB via mongoose
 console.log("Connecting to db");
 const MONGO_URI =
+  process.env.MONGO_URI ||
   "mongodb+srv://romain:romain@projetqualitdev.fkfmr.mongodb.net/qualite_dev?retryWrites=true&w=majority";
+const PORT = process.env.PORT || 3000;
 
 mongoose
   .connect(MONGO_URI, {
@@ -30,13 +38,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then((req, res) => {
-    app.listen(process.env.PORT || 3000, () => {
-      console.log("Listening on http://localhost:3000/");
+    app.listen(PORT, () => {
+      console.log(`Listening on http://localhost:${PORT}/`);
     });
   });
-
-// db = mongoose.connection;
-// db.on("error", console.error.bind(console, "connection error:"));
-// db.once("open", function () {
-//   console.log("connecté à Mongoose");
-// });
