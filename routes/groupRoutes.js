@@ -3,7 +3,7 @@ const Group = require("../models/group");
 const Groupe = require("../models/group");
 const Sprint = require("../models/sprint");
 
-router.get("/creategroup", async (req, res) => {
+router.post("/creategroup", async (req, res) => {
   const { manager, students } = req.body;
   if (manager) {
     try {
@@ -19,7 +19,7 @@ router.get("/creategroup", async (req, res) => {
   }
 });
 
-router.get("/deletesprintfromgroup", async (req, res) => {
+router.post("/deletesprintfromgroup", async (req, res) => {
   const { groupId, sprintId } = req.body;
   if ((groupId, sprintId)) {
     try {
@@ -68,7 +68,7 @@ router.get("/insertsprint", async (req, res) => {
   }
 });
 
-router.get("/ratesprint", async (req, res) => {
+router.post("/ratesprint", async (req, res) => {
   const { sprintId, ratings } = req.body;
   if (sprintId && ratings) {
     try {

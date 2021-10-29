@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const User = require("../models/user");
 
-router.get("/createstudent", async (req, res) => {
+router.post("/createstudent", async (req, res) => {
   const userData = ({ email, name, firstname } = req.body);
   if (
     userData.email &&
@@ -9,21 +9,19 @@ router.get("/createstudent", async (req, res) => {
     userData.firstname &&
     !(await User.findOne({ email: userData.email }))
   )
-    User.create({
-      ...userData,
-      userType: 0,
-    })
-      .then((result) => {
-        res.status(201).json(result);
-      })
-      .catch((err) => {
-        res.status(401).end();
+    try {
+      const student = await User.create({
+        ...userData,
+        userType: 0,
       });
-
+      res.status(201).json(student);
+    } catch (err) {
+      res.status(401).end();
+    }
   res.status(401).end();
 });
 
-router.get("/createteacher", async (req, res) => {
+router.post("/createteacher", async (req, res) => {
   const userData = ({ email, name, firstname } = req.body);
   if (
     userData.email &&
@@ -31,51 +29,49 @@ router.get("/createteacher", async (req, res) => {
     userData.firstname &&
     !(await User.findOne({ email: userData.email }))
   )
-    User.create({
-      ...userData,
-      userType: 1,
-    })
-      .then((result) => {
-        res.status(201).json(result);
-      })
-      .catch((err) => {
-        res.status(401).end();
+    try {
+      const teacher = await User.create({
+        ...userData,
+        userType: 1,
       });
-
+      res.status(201).json(teacher);
+    } catch (err) {
+      res.status(401).end();
+    }
   res.status(401).end();
 });
 
 router.get("/getallstudents", async (req, res) => {
-  User.find({ userType: 0 })
-    .then((result) => res.status(201).json)
-    .catch((err) => {
-      res.status(401).end();
-    });
+  try {
+    const students = await User.find({ userType: 0 });
+    res.status(201).json(students);
+  } catch (err) {
+    res.status(401).end();
+  }
 });
 
 router.get("/getallteachers", async (req, res) => {
-  User.find({ userType: 1 })
-    .then((result) => res.status(201).json)
-    .catch((err) => {
-      res.status(401).end();
-    });
+  try {
+    const teachers = await User.find({ userType: 1 });
+    res.status(201).json(teachers);
+  } catch (err) {
+    res.status(401).end();
+  }
 });
 
-router.get("/deleteuser", (req, res) => {
+router.post("/deleteuser", async (req, res) => {
   const userData = ({ email } = req.body);
   if (email)
-    User.deleteOne(userData)
-      .then((result) => {
-        res.status(201).json({ msg: "Utilisateur supprimé" });
-      })
-      .catch((err) => {
-        res.status(401).end();
-      });
-
+    try {
+      const user = await User.deleteOne(userData);
+      res.status(201).json(user);
+    } catch (err) {
+      res.status(401).end();
+    }
   res.status(401).end();
 });
 
-router.get("/deleteusers", async (req, res) => {
+router.post("/deleteusers", async (req, res) => {
   await User.deleteMany();
   res.status(201);
 });
