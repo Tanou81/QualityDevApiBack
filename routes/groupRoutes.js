@@ -67,19 +67,19 @@ router.post("/deletesprint", async (req, res) => {
 });
 
 router.post("/createsprint", async (req, res) => {
-  const { groupId, sprintParams } = req.body;
+  const { groupId } = req.body;
   if (groupId) {
     try {
       // group exists ?
-      // const group = await Group.findById(groupId);
-      // if (!group) {
-      //   throw Error("No groupe found");
-      // }
+      const group = await Group.findById(groupId);
+      if (!group) {
+        throw Error("No groupe found");
+      }
 
       // Create sprint
       const sprint = await Sprint.create({
-        comment: sprintParams.comment ? sprintParams.comment : "",
-        ratings: sprintParams.labels.map((l) => {
+        comment: "",
+        ratings: group.labels.map((l) => {
           return {
             label: l,
             rating: 0,
@@ -108,8 +108,7 @@ router.post("/ratesprint", async (req, res) => {
           ? { label, rating: ratings[label] }
           : { label, rating };
       });
-      console.log(newRatings);
-      await Sprint.findByIdAndUpdate(sprintId, {ratings: newRatings});
+      await Sprint.findByIdAndUpdate(sprintId, { ratings: newRatings });
       res.status(202).json({ ...sprint, ratings: newRatings });
     } catch (err) {
       res.status(402).json(err);
