@@ -8,6 +8,9 @@ REST API using express and MongoDB
 - [Starting development](#dev)
 - [Starting production](#prod)
 - [List of queries](#queries)
+  - [User queries](#userqueries)
+  - [Group queries](#groupqueries)
+  - [Sprint queries](#sprintqueries)
 
 ## Start project <a id="init"/>
 
@@ -44,7 +47,7 @@ $ npm start
 
 ## List of queries <a id="queries"/>
 
-# User queries
+# User queries <a id="userqueries"/>
 
 ## **Create Student user**
 
@@ -113,7 +116,7 @@ $ npm start
 - email
   <br/>
 
-# Group queries
+# Group queries <a id="groupqueries"/>
 
 ## **Create a group**
 
@@ -209,7 +212,7 @@ $ npm start
 - managerId
   <br/>
 
-# Sprint queries
+# Sprint queries <a id="sprintqueries"/>
 
 ## **Create a sprint**
 
