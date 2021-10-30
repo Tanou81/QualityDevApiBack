@@ -7,8 +7,6 @@ parserOptions:
   ecmaVersion: 13
 rules:
   {
-    "indent": ["error", "space"],
-    "linebreak-style": ["error", "unix"],
     "quotes": ["error", "double"],
     "semi": ["error", "always"],
   }
