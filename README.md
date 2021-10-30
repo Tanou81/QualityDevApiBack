@@ -164,7 +164,7 @@ $ npm start
 
 <strong>Update sprint ratings</strong>
 
-![#ff3f3f] Requirements : labels must exist
+![#df4f4f](Requirements : labels must exist)
 
 #### `PATH_TO_API/api/srpint/updateratings`
 
