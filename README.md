@@ -164,7 +164,7 @@ $ npm start
 
 <strong>Update sprint ratings</strong>
 
-<font color="#d44">Requirements : labels must exist</font>
+![#ff3f3f] Requirements : labels must exist
 
 #### `PATH_TO_API/api/srpint/updateratings`
 
