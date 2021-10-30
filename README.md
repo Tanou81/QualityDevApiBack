@@ -46,148 +46,164 @@ $ npm start
 
 # User queries
 
-**Create Student user**
+## **Create Student user**
 
 #### `PATH_TO_API/api/user/createstudent`
-***POST Request***
+
+> **_POST Request_**
 
 - email
 - name
 - firstname
   <br/>
 
-**Create Teacher user**
+## **Create Teacher user**
 
 #### `PATH_TO_API/api/user/createteacher`
-***POST Request***
+
+> **_POST Request_**
 
 - email
 - name
 - firstname
   <br/>
 
-**Delete a user**
+## **Delete a user**
 
 #### `PATH_TO_API/api/user/delete`
-***POST Request***
+
+> **_POST Request_**
 
 - email
   <br/>
 
-**Get every existing students**
+## **Get every existing students**
 
 #### `PATH_TO_API/api/user/getallstudents`
-***GET Request***
+
+> **_GET Request_**
 
 - NO PARAMETERS
   <br/>
 
-**Get student corresponding to email**
+## **Get student corresponding to email**
 
 #### `PATH_TO_API/api/user/getstudentbyemail`
-***GET Request***
+
+> **_GET Request_**
 
 - email
   <br/>
 
-**Get every existing teachers**
+## **Get every existing teachers**
 
 #### `PATH_TO_API/api/user/getallteachers`
-***GET Request***
+
+> **_GET Request_**
 
 - NO PARAMETERS
   <br/>
 
-**Get teacher corresponding to email**
+## **Get teacher corresponding to email**
 
 #### `PATH_TO_API/api/user/getteacherbyemail`
-***GET Request***
+
+> **_GET Request_**
 
 - email
   <br/>
 
 # Group queries
 
-**Create a group**
+## **Create a group**
 
 #### `PATH_TO_API/api/group/create`
-***POST Request***
+
+> **_POST Request_**
 
 - manager -> teacher_id
 - students -> [student_id, ...]
   <br/>
 
-**Get all groups**
+## **Get all groups**
 
 #### `PATH_TO_API/api/group/getallgroups`
-***GET Request***
+
+> **_GET Request_**
 
 - NO PARAMETERS
   <br/>
 
-**Get group by group id**
+## **Get group by group id**
 
 #### `PATH_TO_API/api/group/getgroup`
-***GET Request***
+
+> **_GET Request_**
 
 - groupId
   <br/>
 
-**Add criteria to group**
+## **Add criteria to group**
 
 > Requirements : no sprint started
 
 #### `PATH_TO_API/api/group/addlabel`
-***POST Request***
+
+> **_POST Request_**
 
 - groupId
 - label -> String
   <br/>
 
-**Remove criteria from group**
+## **Remove criteria from group**
 
 > Requirements : no sprint started
 
 #### `PATH_TO_API/api/group/removelabel`
-***POST Request***
+
+> **_POST Request_**
 
 - groupId
 - label -> String
   <br/>
 
-**Change every criteria from group**
+## **Change every criteria from group**
 
 > Requirements : no sprint started
 
 #### `PATH_TO_API/api/group/removelabel`
-***POST Request***
+
+> **_POST Request_**
 
 - groupId
 - labels -> [String, ...]
   <br/>
 
-**Add students to a group**
+## **Add students to a group**
 
 #### `PATH_TO_API/api/group/addstudents`
-***POST Request***
+
+> **_POST Request_**
 
 - groupId
 - students -> [student_id, ...]
   <br/>
 
-**Remove students from a group**
+## **Remove students from a group**
 
 #### `PATH_TO_API/api/group/removestudents`
-***POST Request***
+
+> **_POST Request_**
 
 - groupId
 - students -> [student_id, ...]
   <br/>
 
-**Change group manager**
+## **Change group manager**
 
 #### `PATH_TO_API/api/group/changemanager`
-***POST Request***
+
+> **_POST Request_**
 
 - groupId
 - managerId
@@ -195,31 +211,34 @@ $ npm start
 
 # Sprint queries
 
-**Create a sprint**
+## **Create a sprint**
 
 > Requirements : group must exist
 
 #### `PATH_TO_API/api/sprint/create`
-***POST Request***
+
+> **_POST Request_**
 
 - groupId
   <br/>
 
-**Delete a sprint**
+## **Delete a sprint**
 
 #### `PATH_TO_API/api/sprint/delete`
-***POST Request***
+
+> **_POST Request_**
 
 - groupId
 - sprintId
   <br/>
 
-**Update sprint ratings**
+## **Update sprint ratings**
 
 > Requirements : labels must exist
 
 #### `PATH_TO_API/api/sprint/updateratings`
-***POST Request***
+
+> **_POST Request_**
 
 - sprintId
 - ratings -> {"label": rating}
@@ -235,10 +254,11 @@ $ npm start
 
   <br/>
 
-**Update sprint comment**
+## **Update sprint comment**
 
 #### `PATH_TO_API/api/sprint/updatecomment`
-***POST Request***
+
+> **_POST Request_**
 
 - sprintId
 - comment
