@@ -1,8 +1,17 @@
 const router = require("express").Router();
 const Group = require("../models/group");
-const Sprint = require("../models/sprint");
+const User = require("../models/user");
 
-const DEFAULT_LABELS = ["TASKS", "ISSUES", "RELEASES", "README", "JSP"];
+const DEFAULT_LABELS = [
+  "TASKS",
+  "ISSUES",
+  "RELEASES",
+  "DOCUMENTATION",
+  "TESTS",
+  "BUILD/CI",
+];
+
+// CREATION DELETION
 router.post("/create", async (req, res) => {
   const { manager, students } = req.body;
   if (manager) {
@@ -13,25 +22,28 @@ router.post("/create", async (req, res) => {
         sprints: [],
         labels: [...DEFAULT_LABELS],
       });
-      res.status(200).json(groupe);
+      res.status(202).json(groupe);
     } catch (err) {
       res.status(402).json(err);
     }
   }
 });
 
+// MODIFIERS
 router.post("/addlabel", async (req, res) => {
   const { groupId, label } = req.body;
   if (groupId && label) {
     try {
       const group = await Group.findById(groupId);
+      if (!group) throw new Error("Group does not exist");
       const labels = [...group.labels, label];
       await Group.findByIdAndUpdate(groupId, { labels });
-      res.status(200).json({ ...group, labels });
+      res.status(202).end();
     } catch (err) {
-      res.status(402).json(err);
+      console.error(err);
     }
   }
+  res.status(402).end();
 });
 
 router.post("/removelabel", async (req, res) => {
@@ -41,80 +53,86 @@ router.post("/removelabel", async (req, res) => {
       const group = await Group.findById(groupId);
       const labels = group.labels.filter((l) => l != label);
       await Group.findByIdAndUpdate(groupId, { labels });
-      res.status(200).json({ ...group, labels });
+      res.status(202).end();
     } catch (err) {
-      res.status(402).json(err);
-    }
-  }
-});
-
-router.post("/deletesprint", async (req, res) => {
-  const { groupId, sprintId } = req.body;
-  if ((groupId, sprintId)) {
-    try {
-      // Deleting sprints
-      const group = await Group.findById(groupId);
-      const sprints = group.sprints.filter((s) => s != sprintId);
-      await Group.findByIdAndUpdate(groupId, { sprints });
-      await Sprint.findByIdAndDelete(sprintId);
-
-      res.status(202).json({ ...group, sprints });
-    } catch (err) {
-      res.status(402).end();
+      console.error(err);
     }
   }
   res.status(402).end();
 });
 
-router.post("/createsprint", async (req, res) => {
-  const { groupId } = req.body;
+router.post("/changelabels", async (req, res) => {
+  const { groupId, labels } = req.body;
   if (groupId) {
     try {
-      // group exists ?
-      const group = await Group.findById(groupId);
-      if (!group) {
-        throw Error("No groupe found");
-      }
-
-      // Create sprint
-      const sprint = await Sprint.create({
-        comment: "",
-        ratings: group.labels.map((l) => {
-          return {
-            label: l,
-            rating: 0,
-          };
-        }),
-      });
-      // Adding sprint ref to group
-      const sprints = [...groupe.sprints, sprint._id];
-      await Group.findByIdAndUpdate(groupId, { sprints });
-      res.status(202).json(sprint);
+      await Group.findByIdAndUpdate(groupId, { labels });
+      res.status(202).end();
     } catch (err) {
-      res.status(402).json(err);
-    }
-    res.status(402).end();
-  }
-});
-
-// ratings => {"label": valeur,...}
-router.post("/ratesprint", async (req, res) => {
-  const { sprintId, ratings } = req.body;
-  if (sprintId && ratings) {
-    try {
-      const sprint = await Sprint.findById(sprintId);
-      const newRatings = sprint.ratings.map(({ label, rating }) => {
-        return ratings.hasOwnProperty(label)
-          ? { label, rating: ratings[label] }
-          : { label, rating };
-      });
-      await Sprint.findByIdAndUpdate(sprintId, { ratings: newRatings });
-      res.status(202).json({ ...sprint, ratings: newRatings });
-    } catch (err) {
-      res.status(402).json(err);
+      console.error(err);
     }
   }
   res.status(402).end();
+});
+
+router.post("/addstudents", async (req, res) => {
+  const { groupId, students } = req.body;
+  if (groupId) {
+    try {
+      const group = await Group.findById(groupId);
+      const newStudents = [
+        ...group.students,
+        ...students.filter((id) => !group.students.includes(id)),
+      ];
+      await Group.findByIdAndUpdate(groupId, { students: newStudents });
+      res.status(202).end();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  res.status(402).end();
+});
+
+router.post("/removestudents", async (req, res) => {
+  const { groupId, students } = req.body;
+  if (groupId) {
+    try {
+      const group = await Group.findById(groupId);
+      const newStudents = [
+        ...group.students.filter((id) => !students.includes(id)),
+      ];
+      await Group.findByIdAndUpdate(groupId, { students: newStudents });
+      res.status(202).end();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  res.status(402).end();
+});
+
+router.post("/changemanager", async (req, res) => {
+  const { groupId, managerId } = req.body;
+  if (groupId) {
+    try {
+      if (!(await User.findById(managerId)))
+        throw new Error("Manager does not exist");
+
+      await Group.findByIdAndUpdate(groupId, { manager: managerId });
+      res.status(202).end();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  res.status(402).end();
+});
+
+// GETTERS
+router.get("/getallgroups", async (req, res) => {
+  try {
+    const groups = await Group.find();
+    res.status(202).json(groups);
+  } catch (error) {
+    res.status(402).end();
+  }
 });
 
 module.exports = router;

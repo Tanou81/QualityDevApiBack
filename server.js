@@ -10,10 +10,12 @@ app.use(express.static("public"));
 // API routes import
 const userRoutes = require("./routes/userRoutes");
 const groupRoutes = require("./routes/groupRoutes");
+const sprintRoutes = require("./routes/sprintRoutes");
 
 // API Routes
 app.use("/api/user", userRoutes);
 app.use("/api/group", groupRoutes);
+app.use("/api/sprint", sprintRoutes);
 
 // Root query
 app.get("/", async (req, res) => {
@@ -37,7 +39,7 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then((req, res) => {
+  .then((/*req, res*/) => {
     app.listen(PORT, () => {
       console.log(`Listening on http://localhost:${PORT}/`);
     });
