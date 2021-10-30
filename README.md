@@ -46,7 +46,7 @@ $ npm start
 
 ### User queries
 
-<strong>Create Student user</strong>
+**Create Student user**
 
 #### `PATH_TO_API/api/user/createstudent`
 
@@ -55,7 +55,7 @@ $ npm start
 - firstname
   <br/>
 
-<strong>Create Teacher user</strong>
+**Create Teacher user**
 
 #### `PATH_TO_API/api/user/createteacher`
 
@@ -64,35 +64,35 @@ $ npm start
 - firstname
   <br/>
 
-<strong>Delete a user</strong>
+**Delete a user**
 
 #### `PATH_TO_API/api/user/delete`
 
 - email
   <br/>
 
-<strong>Get every existing students</strong>
+**Get every existing students**
 
 #### `PATH_TO_API/api/user/getallstudents`
 
-- <font color="#d44">NO PARAMETERS</font>
+- NO PARAMETERS
   <br/>
 
-<strong>Get student corresponding to email</strong>
+**Get student corresponding to email**
 
 #### `PATH_TO_API/api/user/getstudentbyemail`
 
 - email
   <br/>
 
-<strong>Get every existing teachers</strong>
+**Get every existing teachers**
 
 #### `PATH_TO_API/api/user/getallteachers`
 
-- <font color="#d44">NO PARAMETERS</font>
+- NO PARAMETERS
   <br/>
 
-<strong>Get teacher corresponding to email</strong>
+**Get teacher corresponding to email**
 
 #### `PATH_TO_API/api/user/getteacherbyemail`
 
@@ -101,7 +101,7 @@ $ npm start
 
 ### Group queries
 
-<strong>Create a group</strong>
+**Create a group**
 
 #### `PATH_TO_API/api/group/create`
 
@@ -109,23 +109,23 @@ $ npm start
 - students -> [student_id, ...]
   <br/>
 
-<strong>Get all groups</strong>
+**Get all groups**
 
 #### `PATH_TO_API/api/group/getallgroups`
 
-- <font color="#d44">NO PARAMETERS</font>
+- NO PARAMETERS
   <br/>
 
-<strong>Get group by group id</strong>
+**Get group by group id**
 
 #### `PATH_TO_API/api/group/getgroup`
 
 - groupId
   <br/>
 
-<strong>Add criteria to group</strong>
+**Add criteria to group**
 
-<font color="#d44">Requirements : no sprint started</font>
+> Requirements : no sprint started
 
 #### `PATH_TO_API/api/group/addlabel`
 
@@ -133,9 +133,9 @@ $ npm start
 - label -> String
   <br/>
 
-<strong>Remove criteria from group</strong>
+**Remove criteria from group**
 
-<font color="#d44">Requirements : no sprint started</font>
+> Requirements : no sprint started
 
 #### `PATH_TO_API/api/group/removelabel`
 
@@ -145,16 +145,16 @@ $ npm start
 
 ### Group queries
 
-<strong>Create a sprint</strong>
+**Create a sprint**
 
-<font color="#d44">Requirements : group must exist</font>
+> Requirements : group must exist
 
 #### `PATH_TO_API/api/srpint/create`
 
 - groupId
   <br/>
 
-<strong>Delete a sprint</strong>
+**Delete a sprint**
 
 #### `PATH_TO_API/api/srpint/delete`
 
@@ -162,9 +162,9 @@ $ npm start
 - sprintId
   <br/>
 
-<strong>Update sprint ratings</strong>
+**Update sprint ratings**
 
-![#df4f4f](Requirements : labels must exist)
+> <style>o{color:red;}</style><o>Requirements : labels must exist</o>
 
 #### `PATH_TO_API/api/srpint/updateratings`
 
@@ -182,8 +182,7 @@ $ npm start
 
   <br/>
 
-<strong>Update sprint comment</strong>
-
+**Update sprint comment**
 
 #### `PATH_TO_API/api/srpint/updatecomment`
 
