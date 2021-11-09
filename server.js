@@ -2,10 +2,12 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const cors = require('cors')
 
 // Middelware
 app.use(express.json());
 app.use(express.static("public"));
+app.use(cors())
 
 // API routes import
 const userRoutes = require("./routes/userRoutes");
