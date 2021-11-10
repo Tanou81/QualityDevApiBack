@@ -94,6 +94,7 @@ router.get("/getallsprint", async (req, res) => {
   try {
     const sprint = await Sprint.find();
     res.status(202).json(sprint);
+    console.log(sprint);
   } catch (error) {
     res.status(402).end();
   }
