@@ -93,7 +93,7 @@ router.post("/updatecomment", async (req, res) => {
 router.get("/getallsprint", async (req, res) => {
   try {
     const sprint = await Sprint.find();
-    res.status(202).json(groups);
+    res.status(202).json(sprint);
   } catch (error) {
     res.status(402).end();
   }
