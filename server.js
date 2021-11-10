@@ -1,11 +1,13 @@
+
 require("dotenv").config();
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-
+const cors = require("cors");
 // Middelware
 app.use(express.json());
 app.use(express.static("public"));
+app.use(cors());
 
 // API routes import
 const userRoutes = require("./routes/userRoutes");
@@ -44,3 +46,22 @@ mongoose
       console.log(`Listening on http://localhost:${PORT}/`);
     });
   });
+
+
+  /*accès *//*
+  const expresss = require("express");
+var cors = require('cors')
+const appp = expresss();
+appp.use(cors());
+const { createProxyMiddleware } = require('http-proxy-middleware');
+appp.use('/api', createProxyMiddleware({ 
+    target: 'http://localhost:3000/', //original url
+    changeOrigin: true, 
+    //secure: false,
+    onProxyRes: function (proxyRes, req, res) {
+       proxyRes.headers['Access-Control-Allow-Origin'] = '*';
+    }
+}));
+appp.listen(5000);*/
+
+  
