@@ -75,6 +75,16 @@ router.get("/getstudentbyemail", async (req, res) => {
   }
 });
 
+router.get("/getstudentbyid", async (req, res) => {
+  const { _id } = req.body;
+  try {
+    const student = await User.find({ userType: 0, _id });
+    res.status(201).json(student);
+  } catch (err) {
+    res.status(401).end();
+  }
+});
+
 // teachers
 router.get("/getallteachers", async (req, res) => {
   try {

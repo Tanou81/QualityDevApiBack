@@ -89,4 +89,16 @@ router.post("/updatecomment", async (req, res) => {
   res.status(402).end();
 });
 
+// GETTERS
+router.get("/getallsprint", async (req, res) => {
+  try {
+    const sprint = await Sprint.find();
+    console.log(sprint);
+    res.status(202).json(sprint);
+
+  } catch (error) {
+    res.status(402).end();
+  }
+});
+
 module.exports = router;
