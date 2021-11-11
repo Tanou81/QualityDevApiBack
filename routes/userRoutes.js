@@ -82,11 +82,7 @@ router.get("/getstudentbyid", async (req, res) => {
     console.log("/getstudentbyid id - student")
     console.log(_id);
     console.log(student);
-    if (student.length) {
-      res.status(201).json(student);
-    } else {
-      res.status(404).end();
-    }
+    res.status(201).json(student);
   } catch (err) {
     res.status(401).end();
   }
