@@ -29,8 +29,8 @@ router.post("/create", async (req, res) => {
     } catch (err) {
       console.error(err);
     }
-    res.status(402).end();
   }
+  res.status(402).end();
 });
 
 router.post("/delete", async (req, res) => {

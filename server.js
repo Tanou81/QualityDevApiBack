@@ -34,7 +34,7 @@ console.log("Connecting to db");
 const MONGO_URI =
   process.env.MONGO_URI ||
   "mongodb+srv://romain:romain@projetqualitdev.fkfmr.mongodb.net/qualite_dev?retryWrites=true&w=majority";
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 mongoose
   .connect(MONGO_URI, {
