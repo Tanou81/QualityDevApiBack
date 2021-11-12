@@ -76,9 +76,9 @@ router.get("/getstudentbyemail", async (req, res) => {
 });
 
 router.get("/getstudentbyid", async (req, res) => {
-  const { _id } = req.body;
-  console.log("req.body");
-  console.log(req.body);
+  const { _id } = req.query;
+  console.log("req.query");
+  console.log(req.query);
   try {
     const student = await User.find({ userType: 0, _id });
     console.log("/getstudentbyid id - student")
