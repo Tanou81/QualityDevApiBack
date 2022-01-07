@@ -4,7 +4,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
-// Middelware
+// Middleware
 app.use(express.json());
 app.use(express.static("public"));
 app.use(cors());
@@ -32,36 +32,40 @@ app.get("/", async (req, res) => {
 // Connection to MongoDB via mongoose
 console.log("Connecting to db");
 const MONGO_URI =
-  process.env.MONGO_URI ||
+  process.env.MONGO_NEW_URI ||
   "mongodb+srv://romain:romain@projetqualitdev.fkfmr.mongodb.net/qualite_dev?retryWrites=true&w=majority";
 const PORT = process.env.PORT || 8080;
 
-mongoose
-  .connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then((/*req, res*/) => {
-    app.listen(PORT, () => {
-      console.log(`Listening on http://localhost:${PORT}/`);
-    });
-  });
-
-
-  /*accès *//*
-  const expresss = require("express");
-var cors = require('cors')
-const appp = expresss();
-appp.use(cors());
-const { createProxyMiddleware } = require('http-proxy-middleware');
-appp.use('/api', createProxyMiddleware({ 
-    target: 'http://localhost:3000/', //original url
-    changeOrigin: true, 
-    //secure: false,
-    onProxyRes: function (proxyRes, req, res) {
-       proxyRes.headers['Access-Control-Allow-Origin'] = '*';
-    }
-}));
-appp.listen(5000);*/
-
+// Timer to limit attemps of connection to database (see .env: MONGO_CONNECTION_RETRY_DELAY)
+const timer = (ms) => new Promise(res => setTimeout(res, ms));
+let isDatabaseConnected = false;
+async function loopConnectToDatabase() {
+  while (true) {
+    if (!isDatabaseConnected) {
+      console.log("Attempt to connect to database");
+      try {
+        mongoose
+        .connect(MONGO_URI, {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+        })
+        .then((/*req, res*/) => {
+          app.listen(PORT, () => {
+            console.log(`Listening on http://localhost:${PORT}/`);
+          });
+        });
+        isDatabaseConnected = true;
   
+      } catch (error) {
+        console.log("Could not connect to database, error:");
+        console.log(error);
+        console.error(error);
+        isDatabaseConnected = false;
+      }
+    }
+    
+    // Waiting a bit before trying to connect again
+    await timer(process.env.MONGO_CONNECTION_RETRY_DELAY);
+  }
+}
+loopConnectToDatabase();
