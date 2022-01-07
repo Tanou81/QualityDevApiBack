@@ -135,4 +135,16 @@ router.get("/getallgroups", async (req, res) => {
   }
 });
 
+router.get("/getgroupbyid", async (req, res) => {
+  let { _id } = req.query;
+  try {
+    console.log("request on /getgroupbyid");
+    let group = await Group.findById(_id);
+    res.status(201).json(group);
+  } catch (error) {
+    console.log("error");
+    res.status(402).end();
+  }
+})
+
 module.exports = router;
