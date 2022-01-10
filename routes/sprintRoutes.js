@@ -101,4 +101,19 @@ router.get("/getallsprint", async (req, res) => {
   }
 });
 
+router.get("/getsprintbyid", async (req, res) => {
+  const { _id } = req.query;
+  console.log("req.query");
+  console.log(req.query);
+  try {
+    const sprint = await User.find({ _id });
+    console.log("/getsprintbyid id - sprint")
+    console.log(_id);
+    console.log(sprint);
+    res.status(201).json(sprint);
+  } catch (err) {
+    res.status(401).end();
+  }
+});
+
 module.exports = router;
