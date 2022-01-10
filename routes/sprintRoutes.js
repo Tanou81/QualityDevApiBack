@@ -51,6 +51,33 @@ router.post("/delete", async (req, res) => {
   res.status(402).end();
 });
 
+router.post("/updatesprint", async (req, res) => {
+  const { sprintId, sprint} = req.body;
+  console.log("/updatesprint");
+  if (sprintId && sprint) {
+    try {
+      await Sprint.findByIdAndUpdate(sprintId, {
+        comment: sprint.comment,
+        ratings: sprint.ratings,
+        doSend: sprint.doSend
+      },
+      // options
+      {
+        new: true
+      }
+      );
+      console.log("updated sprint:");
+      console.log(sprint);
+      res.status(202).end();
+    } catch (error) {
+      console.log("error trying to update sprint, error:");
+      console.log(error);
+      console.error(error);
+    }
+  }
+  res.status(402).end();
+});
+
 // ratings => {"label": valeur,...}
 router.post("/updateratings", async (req, res) => {
   const { sprintId, ratings } = req.body;
@@ -102,17 +129,20 @@ router.get("/getallsprint", async (req, res) => {
 });
 
 router.get("/getsprintbyid", async (req, res) => {
-  const { _id } = req.query;
-  console.log("req.query");
-  console.log(req.query);
+  let { _id } = req.query;
+  console.log("Fetching specific sprint infos");
   try {
-    const sprint = await User.find({ _id });
-    console.log("/getsprintbyid id - sprint")
-    console.log(_id);
-    console.log(sprint);
-    res.status(201).json(sprint);
-  } catch (err) {
-    res.status(401).end();
+    const sprint = await Sprint.findById(_id);
+    if (sprint) {
+      console.log("sprint");
+      console.log(sprint);
+      res.status(201).json(sprint);
+    } else throw "Could not find asked sprint";
+  } catch (error) {
+    console.log("error fetching specific sprint, error:");
+    console.log(error);
+    console.error(error);
+    res.status(402).end();
   }
 });
 
