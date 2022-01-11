@@ -42,7 +42,7 @@ let isDatabaseConnected = false;
 async function loopConnectToDatabase() {
   while (true) {
     if (!isDatabaseConnected) {
-      console.log("Attempt to connect to database");
+      console.log(`Attempt to connect to database (${MONGO_URI})`);
       try {
         mongoose
         .connect(MONGO_URI, {

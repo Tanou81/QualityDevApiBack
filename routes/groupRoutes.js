@@ -143,6 +143,8 @@ router.get("/getgroupbyid", async (req, res) => {
     res.status(201).json(group);
   } catch (error) {
     console.log("error");
+    console.log(error);
+    console.error(error);
     res.status(402).end();
   }
 })
