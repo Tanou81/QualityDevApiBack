@@ -67,7 +67,7 @@ async function loopConnectToDatabase() {
     }
     
     // Waiting a bit before trying to connect again
-    await timer(process.env.MONGO_CONNECTION_RETRY_DELAY);
+    await timer(process.env.MONGO_CONNECTION_RETRY_DELAY || 60000);
   }
 }
 loopConnectToDatabase();
