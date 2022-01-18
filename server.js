@@ -13,11 +13,13 @@ app.use(cors());
 const userRoutes = require("./routes/userRoutes");
 const groupRoutes = require("./routes/groupRoutes");
 const sprintRoutes = require("./routes/sprintRoutes");
+const labelformatRoutes = require("./routes/labelformatRoutes");
 
 // API Routes
 app.use("/api/user", userRoutes);
 app.use("/api/group", groupRoutes);
 app.use("/api/sprint", sprintRoutes);
+app.use("/api/labelformat", labelformatRoutes);
 
 // Root query
 app.get("/", async (req, res) => {

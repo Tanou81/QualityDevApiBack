@@ -138,7 +138,7 @@ router.get("/getallgroups", async (req, res) => {
 router.get("/getgroupbyid", async (req, res) => {
   let { _id } = req.query;
   try {
-    console.log("request on /getgroupbyid");
+    console.log("/getgroupbyid");
     let group = await Group.findById(_id);
     res.status(201).json(group);
   } catch (error) {
