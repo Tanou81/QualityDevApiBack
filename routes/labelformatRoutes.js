@@ -1,6 +1,12 @@
 const router = require("express").Router();
 const LabelFormat = require("../models/labelformat");
 
+
+/* récupérer un  label  /Il faut comme argument
+* un _id 
+
+*retourne status code 
+*/
 router.get("/getlabelformatbyid", async (req, res) => {
     console.log("/getlabelformatbyid, id");
     let { _id } = req.query;
