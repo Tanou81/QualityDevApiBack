@@ -1,7 +1,15 @@
 const router = require("express").Router();
+//on appel les modèles pour vérif 
 const Group = require("../models/group");
 const Sprint = require("../models/sprint");
 
+
+/* création de sprint   /Il faut comme argument
+* groupID
+*  
+* 
+* retourne status code 
+*/
 router.post("/create", async (req, res) => {
   const { groupId } = req.body;
   if (groupId) {
@@ -33,6 +41,13 @@ router.post("/create", async (req, res) => {
   }
 });
 
+
+/* supprimer un  sprint   /Il faut comme argument
+* groupID et srpintId
+*  
+* 
+* retourne status code 
+*/
 router.post("/delete", async (req, res) => {
   const { groupId, sprintId } = req.body;
   if ((groupId, sprintId)) {
@@ -52,6 +67,12 @@ router.post("/delete", async (req, res) => {
 });
 
 // ratings => {"label": valeur,...}
+/* mets à jour updateratings  /Il faut comme argument
+* sprintId et ratings
+*  
+* 
+* retourne status code 
+*/
 router.post("/updateratings", async (req, res) => {
   const { sprintId, ratings } = req.body;
   if (sprintId && ratings) {
@@ -73,6 +94,14 @@ router.post("/updateratings", async (req, res) => {
   res.status(402).end();
 });
 
+
+
+/* mets à jour le commentaire   /Il faut comme argument
+* sprintId et comment
+*  
+* 
+* retourne status code 
+*/
 router.post("/updatecomment", async (req, res) => {
   const { sprintId, comment } = req.body;
   if (sprintId) {
@@ -90,6 +119,12 @@ router.post("/updatecomment", async (req, res) => {
 });
 
 // GETTERS
+/* récupère tous les sprints   /Il faut comme argument
+*rien 
+*  
+* 
+* retourne status code 
+*/
 router.get("/getallsprint", async (req, res) => {
   try {
     const sprint = await Sprint.find();

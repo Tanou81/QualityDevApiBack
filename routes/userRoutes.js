@@ -1,7 +1,16 @@
 const router = require("express").Router();
+//on appel les modèles pour vérif 
 const User = require("../models/user");
 
 // CREATION DELETION
+
+/* création d'un étudiant   /Il faut comme argument
+* email 
+* name 
+* firstname
+
+* retourne status code 
+*/
 router.post("/createstudent", async (req, res) => {
   const { email, name, firstname } = req.body;
   if (email && name && firstname && !(await User.findOne({ email })))
@@ -10,7 +19,7 @@ router.post("/createstudent", async (req, res) => {
         email,
         name,
         firstname,
-        userType: 0,
+        userType: 0,//type 0 veut dire prof dans users
       });
       res.status(201).json(student);
     } catch (err) {
@@ -19,6 +28,14 @@ router.post("/createstudent", async (req, res) => {
   res.status(401).end();
 });
 
+
+/* création d'un étudiant   /Il faut comme argument
+* email 
+* name 
+* firstname
+
+* retourne status code 
+*/
 router.post("/createteacher", async (req, res) => {
   const { email, name, firstname } = req.body;
   if (email && name && firstname && !(await User.findOne({ email })))
@@ -27,7 +44,7 @@ router.post("/createteacher", async (req, res) => {
         email,
         name,
         firstname,
-        userType: 1,
+        userType: 1,//type 1 veut dire prof dans users
       });
       res.status(201).json(teacher);
     } catch (err) {
@@ -36,6 +53,12 @@ router.post("/createteacher", async (req, res) => {
   res.status(401).end();
 });
 
+/* supprimer un étudiant ici par son email     /Il faut comme argument
+* email 
+
+
+* retourne status code 
+*/
 router.post("/delete", async (req, res) => {
   const { email } = req.body;
   if (email)
@@ -56,6 +79,12 @@ router.post("/deletemultiple", async (req, res) => {
 
 // GETTERS
 // students
+/* récupère  tous les étudiants      /Il faut comme argument
+* rien 
+
+
+* retourne status code 
+*/
 router.get("/getallstudents", async (req, res) => {
   try {
     const students = await User.find({ userType: 0 });
@@ -65,6 +94,12 @@ router.get("/getallstudents", async (req, res) => {
   }
 });
 
+/* récupère  un  étudiants  par son mail     /Il faut comme argument
+* email  
+
+
+* retourne status code 
+*/
 router.get("/getstudentbyemail", async (req, res) => {
   const { email } = req.body;
   try {
@@ -76,6 +111,12 @@ router.get("/getstudentbyemail", async (req, res) => {
 });
 
 // teachers
+/* récupère  tous les profs   /Il faut comme argument
+* rien 
+
+
+* retourne status code 
+*/
 router.get("/getallteachers", async (req, res) => {
   try {
     const teachers = await User.find({ userType: 1 });
@@ -85,6 +126,13 @@ router.get("/getallteachers", async (req, res) => {
   }
 });
 
+// teachers
+/* récupère un  profs par son mail   /Il faut comme argument
+* email  
+
+
+* retourne status code 
+*/
 router.get("/getteacherbyemail", async (req, res) => {
   const { email } = req.body;
   try {

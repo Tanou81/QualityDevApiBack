@@ -1,4 +1,5 @@
 const router = require("express").Router();
+//on appel les modèles pour vérif 
 const Group = require("../models/group");
 const User = require("../models/user");
 
@@ -11,7 +12,14 @@ const DEFAULT_LABELS = [
   "BUILD/CI",
 ];
 
-// CREATION DELETION
+/* création de groupe /Il faut comme argument
+* un manager 
+*  students 
+* sprints
+* labels 
+*
+*retourne status code 
+*/
 router.post("/create", async (req, res) => {
   const { manager, students } = req.body;
   if (manager) {
@@ -29,7 +37,12 @@ router.post("/create", async (req, res) => {
   }
 });
 
-// MODIFIERS
+/* ajout de  de label /Il faut comme argument
+* le groupId
+*  le label 
+* 
+* retourne status code 
+*/
 router.post("/addlabel", async (req, res) => {
   const { groupId, label } = req.body;
   if (groupId && label) {
@@ -46,6 +59,13 @@ router.post("/addlabel", async (req, res) => {
   res.status(402).end();
 });
 
+
+/* supprimer un  label de groupe  /Il faut comme argument
+* le groupId
+*  le label 
+* 
+* retourne status code 
+*/
 router.post("/removelabel", async (req, res) => {
   const { groupId, label } = req.body;
   if (groupId && label) {
@@ -61,6 +81,13 @@ router.post("/removelabel", async (req, res) => {
   res.status(402).end();
 });
 
+
+/* changement de un  label de groupe  /Il faut comme argument
+* le groupId
+*  le label 
+* 
+* retourne status code 
+*/
 router.post("/changelabels", async (req, res) => {
   const { groupId, labels } = req.body;
   if (groupId) {
@@ -74,6 +101,12 @@ router.post("/changelabels", async (req, res) => {
   res.status(402).end();
 });
 
+/* Ajoutes un étudians à un groupe   /Il faut comme argument
+* le groupId
+*  l'etudiant
+* 
+* retourne status code 
+*/
 router.post("/addstudents", async (req, res) => {
   const { groupId, students } = req.body;
   if (groupId) {
@@ -92,6 +125,13 @@ router.post("/addstudents", async (req, res) => {
   res.status(402).end();
 });
 
+
+/* supprime  un étudians à un groupe   /Il faut comme argument
+* le groupId
+*  l'etudiant
+* 
+* retourne status code 
+*/
 router.post("/removestudents", async (req, res) => {
   const { groupId, students } = req.body;
   if (groupId) {
@@ -109,6 +149,12 @@ router.post("/removestudents", async (req, res) => {
   res.status(402).end();
 });
 
+/* change le manager d'un groupe e   /Il faut comme argument
+* le groupId
+*  le managerId
+* 
+* retourne status code 
+*/
 router.post("/changemanager", async (req, res) => {
   const { groupId, managerId } = req.body;
   if (groupId) {
@@ -126,6 +172,12 @@ router.post("/changemanager", async (req, res) => {
 });
 
 // GETTERS
+/* récupère  tous les groupes   /Il faut comme argument
+* rien 
+*  
+* 
+* retourne status code 
+*/
 router.get("/getallgroups", async (req, res) => {
   try {
     const groups = await Group.find();
