@@ -1,3 +1,4 @@
+//models permetant la vérification des données front group  sont compatible avec  back group 
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 

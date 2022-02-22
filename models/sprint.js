@@ -1,3 +1,4 @@
+//models permetant la vérification des données sprint group  sont compatible avec  back sprint 
 const mongoose = require("mongoose");
 const Group = require("../models/group");
 const User = require("../models/user");
