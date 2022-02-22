@@ -11,8 +11,11 @@ const evaluationFormat = require("../models/evaluationformats");
 *retourne status code 
 */
 router.get("/getallevaluationformat", async (req, res) => {
+  console.log("/getallevaluationformat");
   try {
     const evalFormat = await evaluationFormat.find();
+    console.log("evalFormat");
+    console.log(evalFormat);
     res.status(202).json(evalFormat);
   } catch (error) {
     res.status(402).end();
