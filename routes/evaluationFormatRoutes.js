@@ -1,4 +1,8 @@
 const router = require("express").Router();
+//on appel les modèles pour vérif 
+// const Group = require("../models/group");
+// const Sprint = require("../models/sprint");
+// const LabelFormat = require("../models/labelformat");
 const evaluationFormat = require("../models/evaluationformats");
 
 /* récupérer un  label  /Il faut comme argument

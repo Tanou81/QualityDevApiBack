@@ -6,7 +6,7 @@ const evaluationformatSchema = new Schema({
     
     factors: [{
         name: String,
-        maxvalue: Number,
+        maxValue: Number,
         ratio:Number, 
         bonus: Boolean
     }]
