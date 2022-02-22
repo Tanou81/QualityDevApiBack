@@ -11,6 +11,6 @@ const evaluationformatSchema = new Schema({
     }]
 });
 
-const evaluationFormat = mongoose.model("EvaluationFormatSchema", evaluationformatSchema);
+const EvaluationFormat = mongoose.model("EvaluationFormatSchema", evaluationformatSchema);
 
-module.exports = evaluationFormat;
+module.exports = EvaluationFormat;

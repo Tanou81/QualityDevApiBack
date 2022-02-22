@@ -3,7 +3,7 @@ const router = require("express").Router();
 // const Group = require("../models/group");
 // const Sprint = require("../models/sprint");
 // const LabelFormat = require("../models/labelformat");
-const evaluationFormat = require("../models/evaluationformats");
+const EvaluationFormat = require("../models/evaluationformats");
 
 /* récupérer un  label  /Il faut comme argument
 * un _id 
@@ -13,7 +13,7 @@ const evaluationFormat = require("../models/evaluationformats");
 router.get("/getallevaluationformat", async (req, res) => {
   console.log("/getallevaluationformat");
   try {
-    const evalFormat = await evaluationFormat.find();
+    const evalFormat = await EvaluationFormat.find();
     console.log("evalFormat");
     console.log(evalFormat);
     res.status(202).json(evalFormat);
