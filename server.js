@@ -14,13 +14,13 @@ const userRoutes = require("./routes/userRoutes");
 const groupRoutes = require("./routes/groupRoutes");
 const sprintRoutes = require("./routes/sprintRoutes");
 const labelformatRoutes = require("./routes/labelformatRoutes");
-const evaluationformatRoutes = require("./routes/evaluationformatRoutes");
+const evaluationFormatRoutes = require("./routes/evaluationFormatRoutes");
 // API Routes
 app.use("/api/user", userRoutes);
 app.use("/api/group", groupRoutes);
 app.use("/api/sprint", sprintRoutes);
 app.use("/api/labelformat", labelformatRoutes);
-app.use("/api/evaluationformatRoutes", evaluationformatRoutes);
+app.use("/api/evaluationformat", evaluationFormatRoutes);
 // Root query
 app.get("/", async (req, res) => {
   res.send(
