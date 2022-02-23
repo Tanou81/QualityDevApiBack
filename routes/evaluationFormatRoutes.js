@@ -13,7 +13,7 @@ const EvaluationFormat = require("../models/evaluationformats");
 router.get("/getallevaluationformat", async (req, res) => {
   console.log("/getallevaluationformat");
   try {
-    const evalFormat = await Sprint.find();
+    const evalFormat = await EvaluationFormat.find();
     console.log("evalFormat");
     console.log(evalFormat);
     res.status(202).json(evalFormat);
