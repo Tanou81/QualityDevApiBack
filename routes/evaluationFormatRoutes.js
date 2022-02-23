@@ -22,4 +22,29 @@ router.get("/getallevaluationformat", async (req, res) => {
   }
 });
 
+router.post("/updateevalformat", async (req, res) => {
+  const { evaluationFormatId, evalFormat} = req.body;
+  console.log("/updateevalformat");
+  if (evaluationFormatId && evalFormat) {
+    try {
+      await EvaluationFormat.findByIdAndUpdate(evaluationFormatId, {
+        ratio: evalFormat.ratio,
+        ratings: evalFormat.ratings,
+        bonus: evalFormat.bonus,
+      },
+      // options
+      {
+        new: true
+      }
+      );
+      res.status(202).end();
+    } catch (error) {
+      console.log("error trying to update sprint, error:");
+      console.log(error);
+      console.error(error);
+    }
+  }
+  res.status(402).end();
+});
+
 module.exports = router;
