@@ -28,10 +28,11 @@ router.post("/updateevalformat", async (req, res) => {
   if (evaluationFormatId && evalFormat) {
     try {
       await EvaluationFormat.findByIdAndUpdate(evaluationFormatId, {
-        ratio: evalFormat.ratio,
+       factors :[{ ratio: evalFormat.ratio,
         ratings: evalFormat.ratings,
         bonus: evalFormat.bonus,
         name : evalFormat.name,
+       }]
       },
       // options
       {
