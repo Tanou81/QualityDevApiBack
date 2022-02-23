@@ -20,21 +20,47 @@ const DEFAULT_LABELS = [
 *
 *retourne status code 
 */
-router.post("/create", async (req, res) => {
-  const { manager, students } = req.body;
-  if (manager) {
-    try {
-      const groupe = await Group.create({
-        manager,
-        students: students ? students : [],
-        sprints: [],
-        labels: [...DEFAULT_LABELS],
-      });
-      res.status(202).json(groupe);
-    } catch (err) {
-      res.status(402).json(err);
-    }
-  }
+router.post("/create", async (req, res, next) => {
+  console.log("group/create");
+  const { manager, students, evaluationFormat, labelFormat } = req.body;
+  // validation of string parameters
+  if (manager && typeof(manager) == "string"
+      && evaluationFormat && typeof(evaluationFormat) == "string"
+      && labelFormat && typeof(labelFormat) == "string") {
+        // validation of array (student)
+        seenStudentArray = [];
+        if (Array.isArray(students) && students.length > 0) {
+          for (let studentIndex in students) {
+            let studentId = students[studentIndex];
+            if (seenStudentArray.includes(studentId)) {
+              // Duplicate studentId found during group creation
+              res.status(400).json({err: "Duplicate studentId found during group creation"});
+              next();
+              return;
+            } else {
+              seenStudentArray.push(studentId);
+            }
+          }
+          try {
+            const group = await Group.create({
+              manager,
+              students: students ? students : [],
+              sprints: [],
+              studentBonusPoints: [],
+              evaluationFormat,
+              labelFormat,
+            });
+            res.status(202).json(group);
+          } catch (err) {
+            res.status(402).json(err);
+          }
+        }
+      } else {
+        // Wrong field found during group creation (not string)
+        res.status(400).json({err:"Wrong field found during group creation (not string)"})
+        next();
+        return;
+      }
 });
 
 /* ajout de  de label /Il faut comme argument
