@@ -63,6 +63,24 @@ router.post("/create", async (req, res, next) => {
       }
 });
 
+router.delete("/delete", async (req, res) => {
+  console.log("group/delete");
+  const { id } = req.body;
+  console.log("id");
+  console.log(id);
+  console.log(req.body);
+  if (id && typeof(id) == "string" && id.length > 0) {
+    try {
+      const group = await Group.deleteOne({_id: id});
+      res.status(200).json(group);
+    } catch (err) {
+      res.status(404).json({err: err});
+    }
+  } else {
+    res.status(400).json({err: "Id wrong format or too short"});
+  }
+});
+
 /* ajout de  de label /Il faut comme argument
 * le groupId
 *  le label 
