@@ -7,7 +7,7 @@ const groupSchema = new Schema({
   students: [mongoose.Types.ObjectId],
   sprints: [mongoose.Types.ObjectId],
   studentBonusPoints: [Number],
-  evaluationFormat: mongoose.Types.ObjectId,
+  evaluation: mongoose.Types.ObjectId,
   labelFormat: mongoose.Types.ObjectId
 });
 
