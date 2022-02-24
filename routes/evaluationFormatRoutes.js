@@ -30,12 +30,7 @@ router.post("/updateevalformat", async (req, res) => {
       await EvaluationFormat.findByIdAndUpdate(evaluationFormatId, {
         name :evalFormat.name,
         factors: evalFormat.factors,
-      },
-      // options
-      {
-        new: true
-      }
-      );
+      });
       res.status(202).end();
     } catch (error) {
       console.log("error trying to update sprint, error:");
