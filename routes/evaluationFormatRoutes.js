@@ -28,7 +28,8 @@ router.post("/updateevalformat", async (req, res) => {
   if (evaluationFormatId && evalFormat) {
     try {
       await EvaluationFormat.findByIdAndUpdate(evaluationFormatId, {
-        EvaluationFormat: evalFormat 
+        name :evalFormat.name,
+        factors: evalFormat.factors,
       },
       // options
       {
@@ -43,6 +44,7 @@ router.post("/updateevalformat", async (req, res) => {
     }
   }
   res.status(402).end();
+
 });
 
 
