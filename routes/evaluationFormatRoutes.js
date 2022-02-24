@@ -43,25 +43,6 @@ router.post("/updateevalformat", async (req, res) => {
 
 
 
-router.post("/updateratings", async (req, res) => {
-  const { sprintId, ratings } = req.body;
-  if (sprintId && ratings) {
-    try {
-      const sprint = await Sprint.findById(sprintId);
-      // Generating ratings array []
-      const newRatings = sprint.ratings.map(({ label, rating }) => {
-        return Object.prototype.hasOwnProperty.call(ratings, label)
-          ? { label, rating: ratings[label] }
-          : { label, rating };
-      });
-      await Sprint.findByIdAndUpdate(sprintId, { ratings: newRatings });
 
-      res.status(202).end();
-    } catch (err) {
-      console.error(err);
-    }
-  }
-  res.status(402).end();
-});
 
 module.exports = router;
