@@ -11,7 +11,7 @@ const Evaluation = require("../models/evaluation");
 *retourne status code 
 */
 router.get("/getevaluationbyid", async (req, res) => {
-  console.log("/getevaluationbyid")
+  console.log("/getevaluationbyid  tt")
   const { _id } = req.query;
   try {
     const evaluation = await User.find({ _id });
