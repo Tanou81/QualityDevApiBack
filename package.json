@@ -24,6 +24,9 @@
   },
   "homepage": "https://github.com/Tanou81/QualityDevApiBack#readme",
   "dependencies": {
+    "chart.js": "^3.7.1",
+    "chartjs": "^0.3.24",
+    "chartjs-node-canvas": "^4.1.6",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",

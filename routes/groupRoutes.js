@@ -3,6 +3,8 @@ const router = require("express").Router();
 const Group = require("../models/group");
 const User = require("../models/user");
 
+const chartFromGroup = require("../services/chartServices").chartFromGroup;
+
 const DEFAULT_LABELS = [
   "TASKS",
   "ISSUES",
@@ -198,6 +200,26 @@ router.get("/getgroupbyid", async (req, res) => {
     console.log(error);
     console.error(error);
     res.status(402).end();
+  }
+})
+
+router.get("/getgraphbyid", async (req, res) => {
+  let { _id } = req.query;
+  try {
+    console.log("getgraphbyid");
+    let group = await Group.findById(_id);
+    // res.status(201).render("<img src=" + (await chartFromGroup(group)) + "/>");
+    img = await chartFromGroup(group);
+    res.writeHead(200, {
+      'Content-Type': 'image/png',
+      'Content-Length': img.length
+    });
+    res.end(img); 
+
+  } catch (error) {
+    console.log("error");
+    console.log(error);
+    res.status(400).end();
   }
 })
 
