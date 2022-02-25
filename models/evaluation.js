@@ -6,6 +6,6 @@ const evaluationSchema = new Schema({
     grades: [],
 });
 
-const evaluation = mongoose.model("evaluation", evaluationSchema);
+const Evaluation = mongoose.model("Evaluation", evaluationSchema);
 
-module.exports = evaluation;
+module.exports = Evaluation;

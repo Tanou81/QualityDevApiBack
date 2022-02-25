@@ -1,7 +1,8 @@
 const router = require("express").Router();
-//on appel les modèles pour vérif 
 const Group = require("../models/group");
 const User = require("../models/user");
+const Evaluation = require("../models/evaluation");
+const EvaluationFormat = require("../models/evaluationformats");
 
 const DEFAULT_LABELS = [
   "TASKS",
@@ -22,11 +23,11 @@ const DEFAULT_LABELS = [
 */
 router.post("/create", async (req, res, next) => {
   console.log("group/create");
-  const { manager, students, evaluationFormat, labelFormat } = req.body;
+  const { managerId, students, evaluationFormatId, labelFormatId } = req.body;
   // validation of string parameters
-  if (manager && typeof(manager) == "string"
-      && evaluationFormat && typeof(evaluationFormat) == "string"
-      && labelFormat && typeof(labelFormat) == "string") {
+  if (managerId && typeof(managerId) == "string"
+      && evaluationFormatId && typeof(evaluationFormatId) == "string"
+      && labelFormatId && typeof(labelFormatId) == "string") {
         // validation of array (student)
         seenStudentArray = [];
         if (Array.isArray(students) && students.length > 0) {
@@ -42,16 +43,24 @@ router.post("/create", async (req, res, next) => {
             }
           }
           try {
+            // New group = new evaluation
+            const evaluationFormat = await EvaluationFormat.findById(evaluationFormatId);
+            const grades = Array.from({ length: evaluationFormat.factors.length}, () => {return 0;});
+            const evaluation = await Evaluation.create({
+              format: evaluationFormatId,
+              grades
+            });
             const group = await Group.create({
-              manager,
+              manager: managerId,
               students: students ? students : [],
               sprints: [],
               studentBonusPoints: [],
-              evaluationFormat,
-              labelFormat,
+              evaluation,
+              labelFormat: labelFormatId,
             });
             res.status(202).json(group);
           } catch (err) {
+            console.log(err);
             res.status(402).json(err);
           }
         }
@@ -71,8 +80,16 @@ router.delete("/delete", async (req, res) => {
   console.log(req.body);
   if (id && typeof(id) == "string" && id.length > 0) {
     try {
-      const group = await Group.deleteOne({_id: id});
-      res.status(200).json(group);
+      const group = await Group.findById(id);
+      const groupDeleteSummary = await Group.deleteOne({_id: id});
+      console.log("group");
+      console.log(group);
+      console.log("groupDeleteSummary");
+      console.log(groupDeleteSummary);
+      const evaluation = await Evaluation.deleteOne({_id: group.evaluation});
+      console.log("evaluation deleted:");
+      console.log(evaluation);
+      res.status(200).json(groupDeleteSummary);
     } catch (err) {
       res.status(404).json({err: err});
     }
