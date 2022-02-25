@@ -12,7 +12,7 @@ const Evaluation = require("../models/evaluation");
 */
 router.get("/getevaluationbyid", async (req, res) => {
   
-  const { id } = req.query;
+  const { id } = res.body ;
   console.log("/getevaluationbyid  tt", id ,req.query, res.body );
   if(!id){
     res.status(408).end();
