@@ -14,7 +14,7 @@ router.get("/getevaluationbyid", async (req, res) => {
   console.log("/getevaluationbyid  tt")
   const { _id } = req.query;
   try {
-    const evaluation = await User.find({ _id });
+    const evaluation = await Evaluation.find({ _id });
     res.status(201).json(evaluation);
   } catch (err) {
     res.status(401).end();
