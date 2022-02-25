@@ -11,19 +11,21 @@ const Evaluation = require("../models/evaluation");
 *retourne status code 
 */
 router.get("/getevaluationbyid", async (req, res) => {
-  
-  const { id } = res.body ;
-  console.log("/getevaluationbyid  tt", id ,req.query, res.body );
-  if(!id){
-    res.status(408).end();
-  }
-  try {
-    const evaluation = await Evaluation.find({ _id : id });
-    res.status(201).json(evaluation);
-  } catch (err) {
-    res.status(401).end();
-  }
-});
+
+    let { _id } = req.query;
+    console.log("/getevaluationbyid",_id);
+    try {
+      const evaluation = await Evaluation.findById(_id);
+      if (evaluation) {
+        res.status(201).json(evaluation);
+      } else throw "Could not find asked sprint";
+    } catch (error) {
+      console.log("error fetching specific sprint, error:");
+      console.log(error);
+      console.error(error);
+      res.status(402).end();
+    }
+  });
 
 router.post("/updateevaluationID", async (req, res) => {
   const { evaluationFormatId, evalFormat} = req.body;
