@@ -11,18 +11,13 @@ const Evaluation = require("../models/evaluation");
 *retourne status code 
 */
 router.get("/getevaluationbyid", async (req, res) => {
-  console.log("/getevaluationID");
-  let { _id } = req.query;
+  console.log("/getevaluationbyid")
+  const { _id } = req.query;
   try {
-    const eval = await Evaluation.findById(_id);
-    if (eval) {
-      res.status(201).json(eval);
-    } else throw "Could not find asked eval";
-  } catch (error) {
-    console.log("error fetching specific eval, error:");
-    console.log(error);
-    console.error(error);
-    res.status(402).end();
+    const evaluation = await User.find({ _id });
+    res.status(201).json(evaluation);
+  } catch (err) {
+    res.status(401).end();
   }
 });
 
