@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const evaluationSchema = new Schema({
-    format: String,
-    grades: []
+    format: mongoose.Types.ObjectId,
+    grades: [],
 });
 
-const evaluation = mongoose.model("evaluationSchema", evaluationSchema);
+const Evaluation = mongoose.model("Evaluation", evaluationSchema);
 
-module.exports = evaluation;
+module.exports = Evaluation;

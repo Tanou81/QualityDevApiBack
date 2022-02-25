@@ -3,15 +3,14 @@ const Schema = mongoose.Schema;
 
 const evaluationformatSchema = new Schema({
     name: String,
-    
     factors: [{
         name: String,
-        maxvalue: Number,
+        maxValue: Number,
         ratio:Number, 
         bonus: Boolean
     }]
 });
 
-const evaluationFormat = mongoose.model("evaluationformatSchema", evaluationformatSchema);
+const EvaluationFormat = mongoose.model("EvaluationFormat", evaluationformatSchema);
 
-module.exports = evaluationFormat;
+module.exports = EvaluationFormat;

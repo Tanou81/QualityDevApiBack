@@ -1,7 +1,8 @@
 const router = require("express").Router();
-//on appel les modèles pour vérif 
 const Group = require("../models/group");
 const User = require("../models/user");
+const Evaluation = require("../models/evaluation");
+const EvaluationFormat = require("../models/evaluationformats");
 
 const chartFromGroup = require("../services/chartServices").chartFromGroup;
 
@@ -22,20 +23,80 @@ const DEFAULT_LABELS = [
 *
 *retourne status code 
 */
-router.post("/create", async (req, res) => {
-  const { manager, students } = req.body;
-  if (manager) {
+router.post("/create", async (req, res, next) => {
+  console.log("group/create");
+  const { managerId, students, evaluationFormatId, labelFormatId } = req.body;
+  // validation of string parameters
+  if (managerId && typeof(managerId) == "string"
+      && evaluationFormatId && typeof(evaluationFormatId) == "string"
+      && labelFormatId && typeof(labelFormatId) == "string") {
+        // validation of array (student)
+        seenStudentArray = [];
+        if (Array.isArray(students) && students.length > 0) {
+          for (let studentIndex in students) {
+            let studentId = students[studentIndex];
+            if (seenStudentArray.includes(studentId)) {
+              // Duplicate studentId found during group creation
+              res.status(400).json({err: "Duplicate studentId found during group creation"});
+              next();
+              return;
+            } else {
+              seenStudentArray.push(studentId);
+            }
+          }
+          try {
+            // New group = new evaluation
+            const evaluationFormat = await EvaluationFormat.findById(evaluationFormatId);
+            const grades = Array.from({ length: evaluationFormat.factors.length}, () => {return 0;});
+            const evaluation = await Evaluation.create({
+              format: evaluationFormatId,
+              grades
+            });
+            const group = await Group.create({
+              manager: managerId,
+              students: students ? students : [],
+              sprints: [],
+              studentBonusPoints: [],
+              evaluation,
+              labelFormat: labelFormatId,
+            });
+            res.status(202).json(group);
+          } catch (err) {
+            console.log(err);
+            res.status(402).json(err);
+          }
+        }
+      } else {
+        // Wrong field found during group creation (not string)
+        res.status(400).json({err:"Wrong field found during group creation (not string)"})
+        next();
+        return;
+      }
+});
+
+router.delete("/delete", async (req, res) => {
+  console.log("group/delete");
+  const { id } = req.body;
+  console.log("id");
+  console.log(id);
+  console.log(req.body);
+  if (id && typeof(id) == "string" && id.length > 0) {
     try {
-      const groupe = await Group.create({
-        manager,
-        students: students ? students : [],
-        sprints: [],
-        labels: [...DEFAULT_LABELS],
-      });
-      res.status(202).json(groupe);
+      const group = await Group.findById(id);
+      const groupDeleteSummary = await Group.deleteOne({_id: id});
+      console.log("group");
+      console.log(group);
+      console.log("groupDeleteSummary");
+      console.log(groupDeleteSummary);
+      const evaluation = await Evaluation.deleteOne({_id: group.evaluation});
+      console.log("evaluation deleted:");
+      console.log(evaluation);
+      res.status(200).json(groupDeleteSummary);
     } catch (err) {
-      res.status(402).json(err);
+      res.status(404).json({err: err});
     }
+  } else {
+    res.status(400).json({err: "Id wrong format or too short"});
   }
 });
 
