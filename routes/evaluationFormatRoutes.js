@@ -41,8 +41,23 @@ router.post("/updateevalformat", async (req, res) => {
 
 });
 
-
-
-
+router.get("/getEvaluationFormatById", async (req, res) => {
+  console.log("/getEvaluationFormatById");
+  const { _id } = req.query;
+  if (_id && typeof(_id) == "string") {
+    try {
+      const evaluationFormat = await EvaluationFormat.findById(_id);
+      if (evaluationFormat) {
+        res.status(201).json(evaluationFormat);
+      } else throw "Could not find asked evaluationFormat";
+    } catch (err) {
+      console.error("error trying to get evaluationFormat by id");
+      console.error(err);
+      res.status(402).end();
+    }
+  } else {
+    res.status(402).end();
+  }
+});
 
 module.exports = router;
