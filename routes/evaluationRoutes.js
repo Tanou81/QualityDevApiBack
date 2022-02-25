@@ -10,16 +10,16 @@ const Evaluation = require("../models/evaluation");
 
 *retourne status code 
 */
-router.get("/getevaluationID", async (req, res) => {
+router.get("/getevaluationbyid", async (req, res) => {
   console.log("/getevaluationID");
   let { _id } = req.query;
   try {
-    const sprint = await Evaluation.findById(_id);
-    if (sprint) {
-      res.status(201).json(sprint);
-    } else throw "Could not find asked sprint";
+    const eval = await Evaluation.findById(_id);
+    if (eval) {
+      res.status(201).json(eval);
+    } else throw "Could not find asked eval";
   } catch (error) {
-    console.log("error fetching specific sprint, error:");
+    console.log("error fetching specific eval, error:");
     console.log(error);
     console.error(error);
     res.status(402).end();
