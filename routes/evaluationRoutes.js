@@ -11,10 +11,14 @@ const Evaluation = require("../models/evaluation");
 *retourne status code 
 */
 router.get("/getevaluationbyid", async (req, res) => {
-  console.log("/getevaluationbyid  tt")
-  const { _id } = req.query;
+  
+  const { id } = req.query;
+  console.log("/getevaluationbyid  tt", id ,req.query, res.body );
+  if(!id){
+    res.status(408).end();
+  }
   try {
-    const evaluation = await Evaluation.find({ _id });
+    const evaluation = await Evaluation.find({ _id : id });
     res.status(201).json(evaluation);
   } catch (err) {
     res.status(401).end();
