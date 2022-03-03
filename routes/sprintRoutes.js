@@ -1,16 +1,13 @@
 const router = require("express").Router();
-//on appel les modèles pour vérif 
 const Group = require("../models/group");
 const Sprint = require("../models/sprint");
 const LabelFormat = require("../models/labelformat");
 
-
-/* création de sprint   /Il faut comme argument
-* groupID
-*  
-* 
-* retourne status code 
-*/
+/** Sprint creation
+ * 
+ * @description By default put values to either 0 or copy last sprint values
+ * @param groupId
+ */
 router.post("/create", async (req, res) => {
   const { groupId } = req.body;
   console.log("sprint/create id:");
@@ -64,12 +61,11 @@ router.post("/create", async (req, res) => {
 });
 
 
-/* supprimer un  sprint   /Il faut comme argument
-* groupID et srpintId
-*  
-* 
-* retourne status code 
-*/
+/** Delete one sprint and update its group
+ * 
+ * @param groupId
+ * @param sprintId
+ */
 router.post("/delete", async (req, res) => {
   const { groupId, sprintId } = req.body;
   if ((groupId, sprintId)) {
@@ -88,9 +84,14 @@ router.post("/delete", async (req, res) => {
   res.status(402).end();
 });
 
+/** Update one sprint
+ * 
+ * @deprecated use /update
+ * @returns updated sprint if updated
+ */
 router.post("/updatesprint", async (req, res) => {
-  const { sprintId, sprint} = req.body;
   console.log("/updatesprint");
+  const { sprintId, sprint} = req.body;
   if (sprintId && sprint) {
     try {
       await Sprint.findByIdAndUpdate(sprintId, {
@@ -105,22 +106,49 @@ router.post("/updatesprint", async (req, res) => {
       );
       res.status(202).end();
     } catch (error) {
-      console.log("error trying to update sprint, error:");
-      console.log(error);
       console.error(error);
+      res.status(401).end();
     }
   }
   res.status(402).end();
 });
 
-// ratings => {"label": valeur,...}
-/* mets à jour updateratings  /Il faut comme argument
-* sprintId et ratings
-*  
-* 
-* retourne status code 
-*/
-router.post("/updateratings", async (req, res) => {
+/** Update one sprint
+ * 
+ * @description Duplicate of /updatesprint
+ * @returns updated sprint if updated
+ */
+ router.post("/update", async (req, res) => {
+  console.log("/update");
+  const { sprintId, sprint} = req.body;
+  if (sprintId && sprint) {
+    try {
+      await Sprint.findByIdAndUpdate(sprintId, {
+        comment: sprint.comment,
+        ratings: sprint.ratings,
+        doSend: sprint.doSend
+      },
+      // options
+      {
+        new: true
+      }
+      );
+      res.status(202).end();
+    } catch (error) {
+      console.error(error);
+      res.status(401).end();
+    }
+  }
+  res.status(402).end();
+});
+
+/** Update sprint ratings/grades
+ * 
+ * @param sprintId
+ * @param ratings
+ * @todo clean and comment well (overall check)
+ */
+router.put("/updateratings", async (req, res) => {
   const { sprintId, ratings } = req.body;
   if (sprintId && ratings) {
     try {
@@ -141,15 +169,12 @@ router.post("/updateratings", async (req, res) => {
   res.status(402).end();
 });
 
-
-
-/* mets à jour le commentaire   /Il faut comme argument
-* sprintId et comment
-*  
-* 
-* retourne status code 
-*/
-router.post("/updatecomment", async (req, res) => {
+/** Update sprint comment
+ * 
+ * @param sprintId
+ * @param comment
+ */
+router.put("/updatecomment", async (req, res) => {
   const { sprintId, comment } = req.body;
   if (sprintId) {
     try {
@@ -166,12 +191,10 @@ router.post("/updatecomment", async (req, res) => {
 });
 
 // GETTERS
-/* récupère tous les sprints   /Il faut comme argument
-*rien 
-*  
-* 
-* retourne status code 
-*/
+/** Get all sprints
+ * 
+ * 
+ */
 router.get("/getallsprint", async (req, res) => {
   try {
     const sprint = await Sprint.find();
@@ -181,6 +204,10 @@ router.get("/getallsprint", async (req, res) => {
   }
 });
 
+/* Get one sprint by id
+*
+*
+*/
 router.get("/getsprintbyid", async (req, res) => {
   console.log("/getsprintbyid");
   let { _id } = req.query;
@@ -190,8 +217,6 @@ router.get("/getsprintbyid", async (req, res) => {
       res.status(201).json(sprint);
     } else throw "Could not find asked sprint";
   } catch (error) {
-    console.log("error fetching specific sprint, error:");
-    console.log(error);
     console.error(error);
     res.status(402).end();
   }

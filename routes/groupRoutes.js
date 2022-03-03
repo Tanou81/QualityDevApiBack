@@ -15,14 +15,13 @@ const DEFAULT_LABELS = [
   "BUILD/CI",
 ];
 
-/* création de groupe /Il faut comme argument
-* un manager 
-*  students 
-* sprints
-* labels 
-*
-*retourne status code 
-*/
+/** Group creation
+ * 
+ * @param managerId manager/teacher of group
+ * @param students array of student ids
+ * @param evaluationFormatId evaluation format id chosen
+ * @param labelFormatId evaluation format id chosen
+ */
 router.post("/create", async (req, res, next) => {
   console.log("group/create");
   const { managerId, students, evaluationFormatId, labelFormatId } = req.body;
@@ -74,12 +73,16 @@ router.post("/create", async (req, res, next) => {
       }
 });
 
+/** Delete one group and update its Evaluation
+ * 
+ * @param _id @deprecated
+ * @param id
+ * @todo clean & check for usage in front (update param usage?)
+ */
 router.delete("/delete", async (req, res) => {
   console.log("group/delete");
-  const { id } = req.body;
-  console.log("id");
-  console.log(id);
-  console.log(req.body);
+  const { id, _id } = req.body;
+  if (_id) id = _id;
   if (id && typeof(id) == "string" && id.length > 0) {
     try {
       const group = await Group.findById(id);
@@ -100,12 +103,12 @@ router.delete("/delete", async (req, res) => {
   }
 });
 
-/* ajout de  de label /Il faut comme argument
-* le groupId
-*  le label 
-* 
-* retourne status code 
-*/
+/** Add label
+ * 
+ * @deprecated HIGHLY UNRECOMMENDED (@todo check usefulness)
+ * @param groupId
+ * @param label
+ */
 router.post("/addlabel", async (req, res) => {
   const { groupId, label } = req.body;
   if (groupId && label) {
@@ -123,12 +126,12 @@ router.post("/addlabel", async (req, res) => {
 });
 
 
-/* supprimer un  label de groupe  /Il faut comme argument
-* le groupId
-*  le label 
-* 
-* retourne status code 
-*/
+/** Remove label
+ * 
+ * @deprecated HIGHLY UNRECOMMENDED (@todo check usefulness)
+ * @param groupId
+ * @param label
+ */
 router.post("/removelabel", async (req, res) => {
   const { groupId, label } = req.body;
   if (groupId && label) {
@@ -145,13 +148,14 @@ router.post("/removelabel", async (req, res) => {
 });
 
 
-/* changement de un  label de groupe  /Il faut comme argument
-* le groupId
-*  le label 
-* 
-* retourne status code 
-*/
-router.post("/changelabels", async (req, res) => {
+/** Update labels
+ * 
+ * Replaces all labels
+ * @deprecated HIGHLY UNRECOMMENDED (@todo check usefulness)
+ * @param groupId
+ * @param labels
+ */
+router.put("/changelabels", async (req, res) => {
   const { groupId, labels } = req.body;
   if (groupId) {
     try {
@@ -164,12 +168,11 @@ router.post("/changelabels", async (req, res) => {
   res.status(402).end();
 });
 
-/* Ajoutes un étudians à un groupe   /Il faut comme argument
-* le groupId
-*  l'etudiant
-* 
-* retourne status code 
-*/
+/** Add student(s) to group
+ * 
+ * @param groupId
+ * @param students an array of student ids
+ */
 router.post("/addstudents", async (req, res) => {
   const { groupId, students } = req.body;
   if (groupId) {
@@ -188,13 +191,11 @@ router.post("/addstudents", async (req, res) => {
   res.status(402).end();
 });
 
-
-/* supprime  un étudians à un groupe   /Il faut comme argument
-* le groupId
-*  l'etudiant
-* 
-* retourne status code 
-*/
+/** Remove student(s) from group
+ * 
+ * @param groupId
+ * @param students an array of student ids
+ */
 router.post("/removestudents", async (req, res) => {
   const { groupId, students } = req.body;
   if (groupId) {
@@ -212,12 +213,11 @@ router.post("/removestudents", async (req, res) => {
   res.status(402).end();
 });
 
-/* change le manager d'un groupe e   /Il faut comme argument
-* le groupId
-*  le managerId
-* 
-* retourne status code 
-*/
+/** Update manager
+ * 
+ * @param groupId
+ * @param managerId
+ */
 router.post("/changemanager", async (req, res) => {
   const { groupId, managerId } = req.body;
   if (groupId) {
@@ -235,12 +235,10 @@ router.post("/changemanager", async (req, res) => {
 });
 
 // GETTERS
-/* récupère  tous les groupes   /Il faut comme argument
-* rien 
-*  
-* 
-* retourne status code 
-*/
+/** Get all groups
+ * 
+ * 
+ */
 router.get("/getallgroups", async (req, res) => {
   try {
     const groups = await Group.find();
@@ -250,6 +248,10 @@ router.get("/getallgroups", async (req, res) => {
   }
 });
 
+/** Get one group by id
+ * 
+ * @param _id
+ */
 router.get("/getgroupbyid", async (req, res) => {
   let { _id } = req.query;
   try {
@@ -264,6 +266,10 @@ router.get("/getgroupbyid", async (req, res) => {
   }
 })
 
+/** Get (grades) graph image
+ * 
+ * @param _id
+ */
 router.get("/getgraphbyid", async (req, res) => {
   let { _id } = req.query;
   try {
