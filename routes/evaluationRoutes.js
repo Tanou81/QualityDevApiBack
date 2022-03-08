@@ -215,13 +215,13 @@ router.delete("/deleteforce", async (req, res) =>{
  * @todo clean and check
  * @deprecated HIGHLY UNRECOMMENDED
  */
-router.post("/updateevaluationID", async (req, res) => {
-  const { evaluationFormatId, evalFormat} = req.body;
-  console.log("/updateevalformat",evaluationFormatId,evalFormat);
-  if (evaluationFormatId && evalFormat) {
+ router.post("/updateevaluationID", async (req, res) => {
+  const { evaluationID, evaluation} = req.body;
+  console.log("/updateevalformat",evaluationID,evaluation);
+  if (evaluationID && evaluation) {
     try {
-      await EvaluationFormat.findByIdAndUpdate(evaluationFormatId, {
-        factors: evalFormat.factorss,
+      await Evaluation.findByIdAndUpdate(evaluationID, {
+        grades: evaluation.grades,
       });
       res.status(202).end();
     } catch (error) {

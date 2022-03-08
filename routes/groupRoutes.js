@@ -266,6 +266,23 @@ router.get("/getgroupbyid", async (req, res) => {
   }
 })
 
+/** Get all groups with required school year
+ * 
+ * 
+ * @param schoolYear
+ */
+router.get("/getgroupsbyyear", async (req, res) => {
+  let { schoolYear } = req.query;
+  try {
+    let groups = await Group.find({schoolYear});
+    res.status(201).json(groups);
+  } catch (error) {
+    console.error(error);
+    res.status(401).end()
+  }
+  res.status(401).end()
+});
+
 /** Get (grades) graph image
  * 
  * @param _id
