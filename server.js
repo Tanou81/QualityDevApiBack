@@ -16,6 +16,7 @@ const sprintRoutes = require("./routes/sprintRoutes");
 const labelformatRoutes = require("./routes/labelformatRoutes");
 const evaluationFormatRoutes = require("./routes/evaluationFormatRoutes");
 const evaluationRoutes = require("./routes/evaluationRoutes");
+const schoolyearRoutes = require("./routes/schoolyearRoutes");
 // API Routes
 app.use("/api/user", userRoutes);
 app.use("/api/group", groupRoutes);
@@ -23,6 +24,7 @@ app.use("/api/sprint", sprintRoutes);
 app.use("/api/labelformat", labelformatRoutes);
 app.use("/api/evaluationformat", evaluationFormatRoutes);
 app.use("/api/evaluation", evaluationRoutes);
+app.use("/api/schoolyear", schoolyearRoutes);
 // Root query
 app.get("/", async (req, res) => {
   res.send(
