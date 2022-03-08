@@ -27,24 +27,24 @@ router.get("/getevaluationbyid", async (req, res) => {
     }
   });
 
-router.post("/updateevaluationID", async (req, res) => {
-  const { evaluationFormatId, evalFormat} = req.body;
-  console.log("/updateevalformat",evaluationFormatId,evalFormat);
-  if (evaluationFormatId && evalFormat) {
-    try {
-      await EvaluationFormat.findByIdAndUpdate(evaluationFormatId, {
-        factors: evalFormat.factorss,
-      });
-      res.status(202).end();
-    } catch (error) {
-      console.log("error trying to update sprint, error:");
-      console.log(error);
-      console.error(error);
+  router.post("/updateevaluationID", async (req, res) => {
+    const { evaluationID, evaluation} = req.body;
+    console.log("/updateevaluationID",evaluationID,evaluation);
+    if (evaluationID && evaluation) {
+      try {
+        await Evaluation.findByIdAndUpdate(evaluationID, {
+          grades: evaluation.grades,
+        });
+        res.status(202).end();
+      } catch (error) {
+        console.log("error trying to update sprint, error:");
+        console.log(error);
+        console.error(error);
+      }
     }
-  }
-  res.status(402).end();
-
-});
+    res.status(402).end();
+  
+  });
 
 
 
