@@ -27,15 +27,15 @@ router.get("/getevaluationbyid", async (req, res) => {
     }
   });
 
-  router.post("/updateevaluationID", async (req, res) => {
+  router.post("/updategradesevaluationID", async (req, res) => {
     const { evaluationID, evaluation} = req.body;
-    console.log("/updateevaluationID",evaluationID,evaluation);
+    console.log("/updategradesevaluationID",evaluationID,evaluation);
     if (evaluationID && evaluation) {
       try {
         await Evaluation.findByIdAndUpdate(evaluationID, {
-          grades: evaluation.grades,
+          grades: evaluation,
         });
-        res.status(202).end();
+        res.status(202).json(evaluation);
       } catch (error) {
         console.log("error trying to update sprint, error:");
         console.log(error);

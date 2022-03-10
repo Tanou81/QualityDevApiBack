@@ -29,6 +29,7 @@ router.post("/updateevalformat", async (req, res) => {
     try {
       await EvaluationFormat.findByIdAndUpdate(evaluationFormatId, {
         factors: evalFormat.factorss,
+        name: evalFormat.name,
       });
       res.status(202).end();
     } catch (error) {
