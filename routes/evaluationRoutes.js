@@ -112,7 +112,7 @@ router.put("/updategrades", async (req, res) => {
   let { evaluationId, grades } = req.body;
   if (Array.isArray(grades) && grades.length > 0) {
     try {
-      let evaluation = await Evaluation.find(evaluationId);
+      let evaluation = await Evaluation.findById(evaluationId);
       if (evaluation.grades.length != grades.length) 
         throw "\"grades\" array is not of required length";
       let newEvaluation = await Evaluation.findOneAndUpdate(evaluationId, {
