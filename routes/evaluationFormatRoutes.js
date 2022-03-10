@@ -28,7 +28,8 @@ router.post("/updateevalformat", async (req, res) => {
   if (evaluationFormatId && evalFormat) {
     try {
       await EvaluationFormat.findByIdAndUpdate(evaluationFormatId, {
-        factors: evalFormat.factorss,
+        factors: evalFormat.factors,
+        name: evalFormat.name,
       });
       res.status(202).end();
     } catch (error) {
@@ -58,6 +59,22 @@ router.get("/getEvaluationFormatById", async (req, res) => {
   } else {
     res.status(402).end();
   }
+});
+
+router.post("/createevalFormat", async (req, res) => {
+  const { name, factors } = req.body;
+  console.log("createevalFormat",name,factors)
+  if (name && factors)
+    try {
+      const evalFormat = await EvaluationFormat.create({
+        name,
+        factors,
+      });
+      res.status(201).json(evalFormat);
+    } catch (err) {
+      res.status(401).end();
+    }
+  res.status(401).end();
 });
 
 module.exports = router;
