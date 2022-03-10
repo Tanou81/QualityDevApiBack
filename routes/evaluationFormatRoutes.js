@@ -63,6 +63,7 @@ router.get("/getEvaluationFormatById", async (req, res) => {
 
 router.post("/createevalFormat", async (req, res) => {
   const { name, factors } = req.body;
+  console.log("createevalFormat",name,factors)
   if (name && factors)
     try {
       const evalFormat = await EvaluationFormat.create({
