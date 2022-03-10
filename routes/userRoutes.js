@@ -4,13 +4,12 @@ const User = require("../models/user");
 
 // CREATION DELETION
 
-/* création d'un étudiant   /Il faut comme argument
-* email 
-* name 
-* firstname
-
-* retourne status code 
-*/
+/**
+ * Student creation
+ * @param email
+ * @param name
+ * @param firstname
+ */
 router.post("/createstudent", async (req, res) => {
   const { email, name, firstname } = req.body;
   if (email && name && firstname && !(await User.findOne({ email })))
@@ -29,12 +28,11 @@ router.post("/createstudent", async (req, res) => {
 });
 
 
-/* création d'un étudiant   /Il faut comme argument
-* email 
-* name 
-* firstname
-
-* retourne status code 
+/** Student creation
+*
+* @param email
+* @param name
+* @param firstname
 */
 router.post("/createteacher", async (req, res) => {
   const { email, name, firstname } = req.body;
@@ -53,12 +51,10 @@ router.post("/createteacher", async (req, res) => {
   res.status(401).end();
 });
 
-/* supprimer un étudiant ici par son email     /Il faut comme argument
-* email 
-
-
-* retourne status code 
-*/
+/** Delete one user
+ * @param email
+ * @deprecated
+ */
 router.post("/delete", async (req, res) => {
   const { email } = req.body;
   if (email)
@@ -71,19 +67,91 @@ router.post("/delete", async (req, res) => {
   res.status(401).end();
 });
 
+/** Delete one user by id
+ * 
+ * @param _id
+ */
+router.delete("/deletebyid", async (req, res) => {
+  let { _id } = req.body;
+  try {
+    let user = await User.findOneAndDelete({_id});
+    res.status(201).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(401).end();
+  }
+});
+
+/** Delete one user by mail
+*
+* @param email
+*/
+router.delete("/deletebyemail", async (req, res) => {
+  let { email } = req.body;
+  try {
+    let user = await User.findOneAndDelete({email});
+    res.status(201).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(401).end();
+  }
+});
+
+/** Delete multiple users by id
+ * 
+ * @param idArray an array containing id of users to be deleted
+ */
 router.post("/deletemultiple", async (req, res) => {
-  // await User.deleteMany();
-  // res.status(201);
-  res.status(200).send("<span>Not implemented yet...</span>");
+  console.log("/deletemultiple");
+  let { idArray } = req.body;
+  if (Array.isArray(idArray) && idArray.length > 0) {
+    try {
+      let res = await User.deleteMany({_id: {$in: idArray}});
+      res.status(200).json(res);
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    res.status(401).end();
+  }
 });
 
 // GETTERS
 // students
-/* récupère  tous les étudiants      /Il faut comme argument
-* rien 
+
+/** Get all users
+*
+*
+*/
+router.get("/getallusers", async (req, res) => {
+  try {
+    let users = await User.find();
+    res.status(200).json(res);
+  } catch (error) {
+    console.error(error);
+    res.status(401).end();
+  }
+});
+
+/** Get one user by id
+*
+* @param _id
+*/
+router.get("/getuserbyid", async (req, res) => {
+  let { _id } = req.body;
+  try {
+    let user = await User.findById(_id);
+    res.status(201).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(401).end();
+  }
+});
 
 
-* retourne status code 
+/** Get all students
+*
+*
 */
 router.get("/getallstudents", async (req, res) => {
   try {
@@ -94,11 +162,9 @@ router.get("/getallstudents", async (req, res) => {
   }
 });
 
-/* récupère  un  étudiants  par son mail     /Il faut comme argument
-* email  
-
-
-* retourne status code 
+/** Get one student using his email
+*
+* @param email
 */
 router.get("/getstudentbyemail", async (req, res) => {
   const { email } = req.body;
@@ -110,6 +176,10 @@ router.get("/getstudentbyemail", async (req, res) => {
   }
 });
 
+/** Get one student by id
+*
+* @param _id
+*/
 router.get("/getstudentbyid", async (req, res) => {
   console.log("/getstudentbyid")
   const { _id } = req.query;
@@ -122,11 +192,9 @@ router.get("/getstudentbyid", async (req, res) => {
 });
 
 // teachers
-/* récupère  tous les profs   /Il faut comme argument
-* rien 
-
-
-* retourne status code 
+/** Get all teachers
+*
+*
 */
 router.get("/getallteachers", async (req, res) => {
   try {
@@ -138,16 +206,29 @@ router.get("/getallteachers", async (req, res) => {
 });
 
 // teachers
-/* récupère un  profs par son mail   /Il faut comme argument
-* email  
-
-
-* retourne status code 
+/** Get one techer using his email
+*
+* @param email
 */
 router.get("/getteacherbyemail", async (req, res) => {
   const { email } = req.body;
   try {
     const teacher = await User.find({ userType: 1, email });
+    res.status(201).json(teacher);
+  } catch (err) {
+    res.status(401).end();
+  }
+});
+
+/** Get one teacher using his id
+*
+* @param _id
+*/
+router.get("/getteacherbyid", async (req, res) => {
+  console.log("/getteacherbyid")
+  const { _id } = req.query;
+  try {
+    const teacher = await User.find({ userType: 1, _id });
     res.status(201).json(teacher);
   } catch (err) {
     res.status(401).end();
