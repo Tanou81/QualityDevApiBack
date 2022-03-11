@@ -86,7 +86,7 @@ router.put("/updateformat", async (req, res) => {
     if (factorsLength != gradesLength) {
       newGrades = Array.from({length: factorsLength}, () => {return 0});
     }
-    let newEvaluation = Evaluation.findOneAndUpdate({
+    let newEvaluation = Evaluation.findByIdAndUpdate({
       format: formatId,
       grades: newGrades
     },
@@ -115,7 +115,7 @@ router.put("/updategrades", async (req, res) => {
       let evaluation = await Evaluation.findById(evaluationId);
       if (evaluation.grades.length != grades.length) 
         throw "\"grades\" array is not of required length";
-      let newEvaluation = await Evaluation.findOneAndUpdate(evaluationId, {
+      let newEvaluation = await Evaluation.findByIdAndUpdate(evaluationId, {
         grades
       },
       // options
@@ -148,7 +148,7 @@ router.put("/updategradeatindex", async (req, res) => {
     
     let newGrades = evaluation.grades;
     newGrades[index] = grade;
-    let newEvaluation = await Evaluation.findOneAndUpdate(evaluationId, {
+    let newEvaluation = await Evaluation.findByIdAndUpdate(evaluationId, {
       grades: newGrades
     },
     // options
