@@ -80,7 +80,7 @@ router.post("/createevalFormat", async (req, res) => {
  * @param id
  * @deprecated
  */
- router.post("/delete", async (req, res) => {
+ router.post("/deleteevalFormat", async (req, res) => {
   let { _id } = req.body;
   console.log(" delete id : ",_id);
   try {
