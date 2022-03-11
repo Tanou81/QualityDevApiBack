@@ -81,14 +81,17 @@ router.post("/createevalFormat", async (req, res) => {
  * @deprecated
  */
  router.post("/deleteevalFormat", async (req, res) => {
-  let { _id } = req.body;
-  console.log(" delete id : ",_id);
-  try {
-    let user = await EvaluationFormat.findOneAndDelete({_id});
-    res.status(201).json(user);
-  } catch (error) {
-    console.error(error);
-    res.status(401).end();
-  }
+  const { _id } = req.body;
+  
+  //const { email } = req.body;
+  console.log("deleteevalFormat delete id : ",_id);
+  if (_id)
+    try {
+      await EvaluationFormat.deleteOne({ _id });
+      res.status(201).end();
+    } catch (err) {
+      res.status(401).end();
+    }
+  res.status(401).end();
 });
 module.exports = router;
