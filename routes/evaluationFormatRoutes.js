@@ -31,7 +31,7 @@ router.post("/updateevalformat", async (req, res) => {
         factors: evalFormat.factors,
         name: evalFormat.name,
       });
-      res.status(202).end();
+      res.status(202).json();
     } catch (error) {
       console.log("error trying to update sprint, error:");
       console.log(error);
@@ -76,5 +76,22 @@ router.post("/createevalFormat", async (req, res) => {
     }
   res.status(401).end();
 });
-
+/** Delete one format
+ * @param id
+ * @deprecated
+ */
+ router.post("/deleteevalFormat", async (req, res) => {
+  const { _id } = req.body;
+  
+  //const { email } = req.body;
+  console.log("deleteevalFormat delete id : ",_id);
+  if (_id)
+    try {
+      await EvaluationFormat.deleteOne({ _id });
+      res.status(201).end();
+    } catch (err) {
+      res.status(401).end();
+    }
+  res.status(401).end();
+});
 module.exports = router;
