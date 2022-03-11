@@ -82,6 +82,7 @@ router.post("/createevalFormat", async (req, res) => {
  */
  router.post("/delete", async (req, res) => {
   let { _id } = req.body;
+  console.log(" delete id : ",_id);
   try {
     let user = await EvaluationFormat.findOneAndDelete({_id});
     res.status(201).json(user);
