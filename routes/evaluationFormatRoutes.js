@@ -74,7 +74,7 @@ router.get("/getEvaluationFormatById", async (req, res) => {
   //if (_id) id = _id;
   if (_id) {
     try {
-      const group = await Group.findById(id);
+      const group = await EvaluationFormat.findById(_id);
       const groupDeleteSummary = await EvaluationFormat.deleteOne({_id: _id});
       console.log("group");
       console.log(group);
