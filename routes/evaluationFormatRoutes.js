@@ -67,7 +67,7 @@ router.get("/getEvaluationFormatById", async (req, res) => {
  * @deprecated
  */
  router.post("/deleteevalFormat", async (req, res) => {
-  const { _id } = req.body;
+  let { _id } = req.query;
   //const { email } = req.body;
   console.log("deleteevalFormat delete id : ",_id);
   if (_id)
