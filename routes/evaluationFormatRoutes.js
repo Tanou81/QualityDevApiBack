@@ -62,22 +62,34 @@ router.get("/getEvaluationFormatById", async (req, res) => {
 });
 
 
-/** Delete one format
+/** Delete one group and update its Evaluation
+ * 
+ * @param _id @deprecated
  * @param id
- * @deprecated
+ * @todo clean & check for usage in front (update param usage?)
  */
- router.post("/deleteevalFormat", async (req, res) => {
-  let { _id } = req.query;
-  //const { email } = req.body;
-  console.log("deleteevalFormat delete id : ",_id);
-  if (_id)
+ router.delete("/deleteevalFormat", async (req, res) => {
+  console.log("evalFormat/deleteevalFormat");
+  const { _id } = req.body;
+  //if (_id) id = _id;
+  if (_id) {
     try {
-      await EvaluationFormat.deleteOne({ _id });
-      res.status(201).end();
+      const group = await Group.findById(id);
+      const groupDeleteSummary = await EvaluationFormat.deleteOne({_id: _id});
+      console.log("group");
+      console.log(group);
+      console.log("groupDeleteSummary");
+      console.log(groupDeleteSummary);
+      // const evaluation = await Evaluation.deleteOne({_id: group.evaluation});
+      // console.log("evaluation deleted:");
+      // console.log(evaluation);
+      // res.status(200).json(groupDeleteSummary);
     } catch (err) {
-      res.status(401).end();
+      res.status(404).json({err: err});
     }
-  res.status(401).end();
+  } else {
+    res.status(400).json({err: "Id wrong format or too short"});
+  }
 });
 
 router.post("/createevalFormat", async (req, res) => {
