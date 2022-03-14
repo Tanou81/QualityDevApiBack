@@ -69,7 +69,7 @@ router.get("/getEvaluationFormatById", async (req, res) => {
  * @todo clean & check for usage in front (update param usage?)
  */
  router.delete("/deleteevalFormat", async (req, res) => {
-  console.log("evalFormat/deleteevalFormat");
+  console.log("evalFormat/deleteevalFormat",req.body);
   const { _id } = req.body;
   //if (_id) id = _id;
   if (_id) {
