@@ -61,6 +61,37 @@ router.get("/getEvaluationFormatById", async (req, res) => {
   }
 });
 
+
+/** Delete one group and update its Evaluation
+ * 
+ * @param _id @deprecated
+ * @param id
+ * @todo clean & check for usage in front (update param usage?)
+ */
+ router.delete("/deleteevalFormat", async (req, res) => {
+  console.log("evalFormat/deleteevalFormat",req.body);
+  const { _id } = req.body;
+  //if (_id) id = _id;
+  if (_id) {
+    try {
+      const group = await EvaluationFormat.findById(_id);
+      const groupDeleteSummary = await EvaluationFormat.deleteOne({_id: _id});
+      console.log("group");
+      console.log(group);
+      console.log("groupDeleteSummary");
+      console.log(groupDeleteSummary);
+      // const evaluation = await Evaluation.deleteOne({_id: group.evaluation});
+      // console.log("evaluation deleted:");
+      // console.log(evaluation);
+      // res.status(200).json(groupDeleteSummary);
+    } catch (err) {
+      res.status(404).json({err: err});
+    }
+  } else {
+    res.status(400).json({err: "Id wrong format or too short"});
+  }
+});
+
 router.post("/createevalFormat", async (req, res) => {
   const { name, factors } = req.body;
   console.log("createevalFormat",name,factors)
@@ -94,4 +125,5 @@ router.post("/createevalFormat", async (req, res) => {
     }
   res.status(400).end();
 });
+
 module.exports = router;
