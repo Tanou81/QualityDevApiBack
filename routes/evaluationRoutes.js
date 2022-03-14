@@ -23,10 +23,10 @@ router.post("/create", async (req, res) => {
       res.status(201).json(evaluation);
     } catch (error) {
       console.error(error);
-      res.status(401).end()
+      res.status(400).end()
     }
   }
-  res.status(401).end();
+  res.status(400).end();
 });
 
 // GETTERS
@@ -40,7 +40,7 @@ router.get("/getallevaluations", async (req, res) => {
     res.status(201).json(evaluations);
   } catch (error) {
     console.error(error);
-    res.status(401).end();
+    res.status(400).end();
   }
 });
 
@@ -97,7 +97,7 @@ router.put("/updateformat", async (req, res) => {
     res.status(201).json(newEvaluation);
   } catch (error) {
     console.error(error);
-    res.status(401).end();
+    res.status(400).end();
   }
 });
 
@@ -127,7 +127,7 @@ router.put("/updategrades", async (req, res) => {
       console.error(error);
     }
   }
-  res.status(401).end();
+  res.status(400).end();
 });
 
 /** Update one (only one) grade 
@@ -182,7 +182,7 @@ router.delete("/delete", async (req, res) =>{
     res.status(201).json(evaluation);
   } catch (error) {
     console.error(error);
-    res.status(401).end()
+    res.status(400).end()
   }
 });
 
@@ -202,7 +202,7 @@ router.delete("/deleteforce", async (req, res) =>{
     res.status(201).json(evaluation);
   } catch (error) {
     console.error(error);
-    res.status(401).end()
+    res.status(400).end()
   }
 });
 
