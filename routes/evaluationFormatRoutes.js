@@ -2,9 +2,10 @@ const router = require("express").Router();
 //on appel les modèles pour vérif 
 // const Group = require("../models/group");
  const Sprint = require("../models/sprint");
+ const Group = require("../models/group");
 // const LabelFormat = require("../models/labelformat");
 const EvaluationFormat = require("../models/evaluationformats");
-
+const Evaluation = require("../models/evaluation");
 /* récupérer un  label  /Il faut comme argument
 * un _id 
 
@@ -27,17 +28,51 @@ router.post("/updateevalformat", async (req, res) => {
   console.log("/updateevalformat",evaluationFormatId,evalFormat);
   if (evaluationFormatId && evalFormat) {
     try {
-      await EvaluationFormat.findByIdAndUpdate(evaluationFormatId, {
+      
+      const EvaluationFormatt = await EvaluationFormat.findByIdAndUpdate(evaluationFormatId, {
         factors: evalFormat.factors,
         name: evalFormat.name,
       });
-      res.status(202).json();
+      
+      console.log(EvaluationFormatt);
+      res.status(202).json(EvaluationFormatt);
     } catch (error) {
       console.log("error trying to update sprint, error:");
       console.log(error);
       console.error(error);
     }
   }
+  try{
+  const Eval = await Evaluation.find({format : evaluationFormatId});
+      console.log("Eval",Eval)
+      const newGrades=[]
+      // console.log("rétrécrir",Eval.length)
+      for(i = 0; i<evalFormat.factors.length ;i++){
+        //console.log("rétrécrir",Eval[i].grades.length)
+        console.log(evalFormat.factors.length)
+        newGrades.push(0)
+        // if (evalFormat.factors.length<Eval[i].grades.length){
+        //   newGrades = [evalFormat.factors.length]
+        // }
+      }
+      for(i = 0; i<Eval.length ;i++){
+        console.log("la",Eval[i]._id)
+        const newEVal= await Evaluation.findByIdAndUpdate(Eval[i]._id,{grades: newGrades});
+        console.log(newEVal);
+       
+      }
+      res.status(201).json();
+
+     
+     
+      // if( evalFormat.factors.length ()>Eval.grades.length ()){
+      //   console.log("rétrécrirrr")
+      // }
+    }  catch (error) {
+      console.log("error trying to take eval, error:");
+      console.log(error);
+      console.error(error);
+    }
   res.status(402).end();
 
 });
