@@ -28,10 +28,10 @@ router.post("/create", async (req, res) => {
             res.status(201).json(labelFormat);
         } catch (error) {
             console.error(error);
-            res.status(401).end();
+            res.status(400).end();
         }
     }
-    res.status(401).end();
+    res.status(400).end();
 });
 
 
@@ -46,7 +46,7 @@ router.get("/getalllabelformats", async (req, res) => {
         res.status(201).json(labelFormats);
     } catch (error) {
         console.error(error);
-        res.status(401).end();
+        res.status(400).end();
     }
 });
 
@@ -65,7 +65,7 @@ router.get("/getlabelformatbyid", async (req, res) => {
         } else throw "Could not find asked labelformat";
     } catch (error) {
         console.error(error);
-        res.status(401).end();
+        res.status(400).end();
     }
 });
 
@@ -93,10 +93,10 @@ router.put("/updatename", async (req, res) => {
             res.status(201).json(labelFormat);
         } catch (error) {
             console.error(error);
-            res.status(401).end();
+            res.status(400).end();
         }
     }
-    res.status(401).end();
+    res.status(400).end();
 });
 
 /** Update labelFormat weeks amount
@@ -116,7 +116,7 @@ router.put("/updateweeks", async (req, res) => {
         res.status(201).json(labelFormat);
     } catch (error) {
         console.error(error);
-        res.status(401).end();
+        res.status(400).end();
     }
 });
 
@@ -146,10 +146,10 @@ router.put("/updatelabels", async (req, res) => {
             res.status(201).json(labelFormat);
         } catch (error) {
             console.error(error);
-            res.status(401).end();
+            res.status(400).end();
         }
     }
-    res.status(401).end();
+    res.status(400).end();
 });
 */
 

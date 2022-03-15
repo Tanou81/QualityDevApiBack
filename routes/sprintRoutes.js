@@ -107,7 +107,7 @@ router.post("/updatesprint", async (req, res) => {
       res.status(202).end();
     } catch (error) {
       console.error(error);
-      res.status(401).end();
+      res.status(400).end();
     }
   }
   res.status(402).end();
@@ -136,7 +136,7 @@ router.post("/updatesprint", async (req, res) => {
       res.status(202).end();
     } catch (error) {
       console.error(error);
-      res.status(401).end();
+      res.status(400).end();
     }
   }
   res.status(402).end();

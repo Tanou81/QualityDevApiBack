@@ -278,9 +278,9 @@ router.get("/getgroupsbyyear", async (req, res) => {
     res.status(201).json(groups);
   } catch (error) {
     console.error(error);
-    res.status(401).end()
+    res.status(400).end()
   }
-  res.status(401).end()
+  res.status(400).end()
 });
 
 /** Get (grades) graph image

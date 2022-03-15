@@ -110,10 +110,27 @@ router.post("/createevalFormat", async (req, res) => {
       });
       res.status(201).json(evalFormat);
     } catch (err) {
-      res.status(401).end();
+      res.status(400).end();
     }
-  res.status(401).end();
+  res.status(400).end();
 });
-
+/** Delete one format
+ * @param id
+ * @deprecated
+ */
+ router.post("/delete", async (req, res) => {
+  const { _id } = req.body;
+  
+  //const { email } = req.body;
+  console.log("deleteevalFormat delete id : ",_id);
+  if (_id)
+    try {
+      await EvaluationFormat.deleteOne({ _id });
+      res.status(201).end();
+    } catch (err) {
+      res.status(400).end();
+    }
+  res.status(400).end();
+});
 
 module.exports = router;

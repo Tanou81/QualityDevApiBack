@@ -19,9 +19,9 @@ router.post("/create", async (req, res) => {
     res.status(201).json(schoolYear);
   } catch (error) {
     console.error(error);
-    res.status(401).end();
+    res.status(400).end();
   }
-  res.status(401).end();
+  res.status(400).end();
 });
 
 // Read / Getter
@@ -36,9 +36,9 @@ router.get("/getallschoolyears", async (req, res) => {
     res.status(201).json(schoolYears);
   } catch (error) {
     console.error(error);
-    res.status(401).end()
+    res.status(400).end()
   }
-  res.status(401).end()
+  res.status(400).end()
 });
 
 /** Get one school year by id
@@ -54,9 +54,9 @@ router.get("/getbyid", async (req, res) => {
     res.status(201).json(schoolYear);
   } catch (error) {
     console.error(error);
-    res.status(401).end();
+    res.status(400).end();
   }
-  res.status(401).end();
+  res.status(400).end();
 });
 
 // Update
@@ -73,9 +73,9 @@ router.put("/updatename", async (req, res) => {
     res.status(201).json(schoolYear);
   } catch (error) {
     console.error(error);
-    res.status(401).end();
+    res.status(400).end();
   }
-  res.status(401).end();
+  res.status(400).end();
 });
 
 // Delete
@@ -96,9 +96,9 @@ router.delete("/delete", async (req, res) => {
     res.status(201).json(schoolYear);
   } catch (error) {
     console.error(error);
-    res.status(401).end();
+    res.status(400).end();
   }
-  res.status(401).end();
+  res.status(400).end();
 });
 
 module.exports = router;
