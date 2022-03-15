@@ -59,8 +59,10 @@ router.post("/updateevalformat", async (req, res) => {
         console.log("la",Eval[i]._id)
         const newEVal= await Evaluation.findByIdAndUpdate(Eval[i]._id,{grades: newGrades});
         console.log(newEVal);
-        res.status(201).json(newEVal);
+       
       }
+      res.status(201).json();
+
      
      
       // if( evalFormat.factors.length ()>Eval.grades.length ()){
