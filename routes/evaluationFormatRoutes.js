@@ -28,23 +28,31 @@ router.post("/updateevalformat", async (req, res) => {
   console.log("/updateevalformat",evaluationFormatId,evalFormat);
   if (evaluationFormatId && evalFormat) {
     try {
-      const Eval = await Eval.find({format : evaluationFormatId});
-      console.log(Eval)
+      
       const EvaluationFormat = await EvaluationFormat.findByIdAndUpdate(evaluationFormatId, {
         factors: evalFormat.factors,
         name: evalFormat.name,
       });
-      if( evalFormat.factors.size()>Eval.grades.size()){
-        console.log("rétrécrir")
-      }
+      
       console.log(EvaluationFormat);
-      res.status(202).json();
+      res.status(202).json(EvaluationFormat);
     } catch (error) {
       console.log("error trying to update sprint, error:");
       console.log(error);
       console.error(error);
     }
   }
+  try{
+  const Eval = await Eval.find({format : evaluationFormatId});
+      console.log(Eval)
+      if( evalFormat.factors.size()>Eval.grades.size()){
+        console.log("rétrécrir")
+      }
+    }  catch (error) {
+      console.log("error trying to take eval, error:");
+      console.log(error);
+      console.error(error);
+    }
   res.status(402).end();
 
 });
