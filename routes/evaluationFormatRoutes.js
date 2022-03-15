@@ -29,13 +29,13 @@ router.post("/updateevalformat", async (req, res) => {
   if (evaluationFormatId && evalFormat) {
     try {
       
-      const EvaluationFormat = await EvaluationFormat.findByIdAndUpdate(evaluationFormatId, {
+      const EvaluationFormatt = await EvaluationFormat.findByIdAndUpdate(evaluationFormatId, {
         factors: evalFormat.factors,
         name: evalFormat.name,
       });
       
-      console.log(EvaluationFormat);
-      res.status(202).json(EvaluationFormat);
+      console.log(EvaluationFormatt);
+      res.status(202).json(EvaluationFormatt);
     } catch (error) {
       console.log("error trying to update sprint, error:");
       console.log(error);
@@ -43,7 +43,7 @@ router.post("/updateevalformat", async (req, res) => {
     }
   }
   try{
-  const Eval = await Eval.find({format : evaluationFormatId});
+  const Eval = await Evaluation.find({format : evaluationFormatId});
       console.log(Eval)
       if( evalFormat.factors.size()>Eval.grades.size()){
         console.log("rétrécrir")
