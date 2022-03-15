@@ -56,7 +56,7 @@ router.post("/updateevalformat", async (req, res) => {
         // }
       }
       console.log("newGrades",newGrades)
-      const newEVal= await Evaluation.findByIdAndUpdate({format : evaluationFormatId, grades: newGrades,});
+      const newEVal= await Evaluation.findOneAndUpdate({format : evaluationFormatId, grades: newGrades});
       console.log(newEVal);
       res.status(201).json(newEVal);
      
