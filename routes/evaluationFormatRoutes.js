@@ -56,6 +56,7 @@ router.post("/updateevalformat", async (req, res) => {
         // }
       }
       for(i = 0; i<Eval.length ;i++){
+        console.log("la",Eval[i]._id)
         const newEVal= await Evaluation.findByIdAndUpdate(Eval[i]._id,{grades: newGrades});
         console.log(newEVal);
         res.status(201).json(newEVal);
