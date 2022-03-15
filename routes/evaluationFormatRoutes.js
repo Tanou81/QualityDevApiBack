@@ -45,12 +45,16 @@ router.post("/updateevalformat", async (req, res) => {
   try{
   const Eval = await Evaluation.find({format : evaluationFormatId});
       console.log("Eval",Eval)
-      
+      const newGrades=[]
       // console.log("rétrécrir",Eval.length)
       for(i = 0; i<Eval.length ;i++){
         console.log("rétrécrir",Eval[i].grades.length)
         console.log(evalFormat.factors.length)
+        if (evalFormat.factors.length<Eval[i].grades.length){
+          newGrades = [evalFormat.factors.length]
+        }
       }
+      console.log("newGrades",newGrades)
       // if( evalFormat.factors.length ()>Eval.grades.length ()){
       //   console.log("rétrécrirrr")
       // }
