@@ -49,7 +49,7 @@ router.post("/updateevalformat", async (req, res) => {
       // console.log("rétrécrir",Eval.length)
       for(i = 0; i<Eval.length ;i++){
         console.log("rétrécrir",Eval[i].grades.length)
-        console.log(evalFormat.factors)
+        console.log(evalFormat.factors.length)
       }
       // if( evalFormat.factors.length ()>Eval.grades.length ()){
       //   console.log("rétrécrirrr")
