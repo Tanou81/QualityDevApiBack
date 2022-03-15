@@ -59,6 +59,22 @@ router.get("/getbyid", async (req, res) => {
   res.status(400).end();
 });
 
+/** Get all schoolYears objects which start at year startYear
+ * 
+ * @param startYear
+ */
+router.get("/getAllStartingByYear", async (req, res) => {
+  let { startYear } = req.query;
+  try {
+    let schoolYears = await SchoolYear.find({startYear});
+    res.status(201).json(schoolYears);
+  } catch (error) {
+    console.error(error);
+    res.status(400).end();
+  }
+  res.status(400).end();
+});
+
 // Update
 router.put("/updatename", async (req, res) => {
   let { _id, name } = req.body;

@@ -61,7 +61,7 @@ router.post("/create", async (req, res, next) => {
             });
             res.status(202).json(group);
           } catch (err) {
-            console.log(err);
+            console.error(err);
             res.status(402).json(err);
           }
         }
@@ -87,13 +87,13 @@ router.delete("/delete", async (req, res) => {
     try {
       const group = await Group.findById(id);
       const groupDeleteSummary = await Group.deleteOne({_id: id});
-      console.log("group");
-      console.log(group);
-      console.log("groupDeleteSummary");
-      console.log(groupDeleteSummary);
+      // console.log("group");
+      // console.log(group);
+      // console.log("groupDeleteSummary");
+      // console.log(groupDeleteSummary);
       const evaluation = await Evaluation.deleteOne({_id: group.evaluation});
-      console.log("evaluation deleted:");
-      console.log(evaluation);
+      // console.log("evaluation deleted:");
+      // console.log(evaluation);
       res.status(200).json(groupDeleteSummary);
     } catch (err) {
       res.status(404).json({err: err});
@@ -218,20 +218,75 @@ router.post("/removestudents", async (req, res) => {
  * @param groupId
  * @param managerId
  */
-router.post("/changemanager", async (req, res) => {
+router.put("/updatemanager", async (req, res) => {
   const { groupId, managerId } = req.body;
   if (groupId) {
     try {
       if (!(await User.findById(managerId)))
         throw new Error("Manager does not exist");
 
-      await Group.findByIdAndUpdate(groupId, { manager: managerId });
-      res.status(202).end();
+      let manager = await Group.findByIdAndUpdate(groupId,
+        { manager: managerId },
+        // options
+        {
+          new: true
+        });
+      res.status(201).json(manager);
     } catch (err) {
       console.error(err);
     }
   }
   res.status(402).end();
+});
+
+/** Update students
+ * 
+ * @param groupId
+ * @param students
+ */
+router.put("/updatestudents", async (req, res) => {
+  let { groupId, students } = req.body;
+  console.log("groupId");
+  console.log(groupId);
+  console.log("students");
+  console.log(students);
+  try {
+    let group = await Group.findByIdAndUpdate(groupId, {
+      students
+    },
+    // options
+    {
+      new: true
+    });
+    console.log("new group");
+    console.log(group);
+    res.status(201).json(group);
+  } catch (error) {
+    console.error(error);
+    res.status(400).end();
+  }
+});
+
+/** Update labelFormat
+ * 
+ * @param groupId
+ * @param labelFormatId
+ */
+router.put("/updatelabelformat", async (req, res) => {
+  let { groupId, labelFormatId } = req.body;
+  try {
+    let group = await Group.findByIdAndUpdate(groupId, {
+      labelFormat: labelFormatId
+    },
+    // options
+    {
+      new: true
+    });
+    res.status(201).json(group);
+  } catch (error) {
+    console.error(error);
+    res.status(400).end();
+  }
 });
 
 // GETTERS
@@ -260,7 +315,6 @@ router.get("/getgroupbyid", async (req, res) => {
     res.status(201).json(group);
   } catch (error) {
     console.log("error");
-    console.log(error);
     console.error(error);
     res.status(402).end();
   }
@@ -301,8 +355,7 @@ router.get("/getgraphbyid", async (req, res) => {
     res.end(img); 
 
   } catch (error) {
-    console.log("error");
-    console.log(error);
+    console.error(error);
     res.status(400).end();
   }
 })
