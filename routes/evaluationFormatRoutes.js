@@ -46,9 +46,9 @@ router.post("/updateevalformat", async (req, res) => {
   const Eval = await Evaluation.find({format : evaluationFormatId});
       console.log("Eval",Eval)
       console.log("rétrécrir",Eval.grades)
-      if( evalFormat.factors.length ()>Eval.grades.length ()){
-        console.log("rétrécrirrr")
-      }
+      // if( evalFormat.factors.length ()>Eval.grades.length ()){
+      //   console.log("rétrécrirrr")
+      // }
     }  catch (error) {
       console.log("error trying to take eval, error:");
       console.log(error);
