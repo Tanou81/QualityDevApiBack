@@ -56,6 +56,10 @@ router.post("/updateevalformat", async (req, res) => {
         // }
       }
       console.log("newGrades",newGrades)
+      const newEVal= await Evaluation.findByIdAndUpdate({format : evaluationFormatId, grades: newGrades,});
+      console.log(newEVal);
+      res.status(201).json(newEVal);
+     
       // if( evalFormat.factors.length ()>Eval.grades.length ()){
       //   console.log("rétrécrirrr")
       // }
