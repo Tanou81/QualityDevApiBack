@@ -2,9 +2,10 @@ const router = require("express").Router();
 //on appel les modèles pour vérif 
 // const Group = require("../models/group");
  const Sprint = require("../models/sprint");
+ const Group = require("../models/group");
 // const LabelFormat = require("../models/labelformat");
 const EvaluationFormat = require("../models/evaluationformats");
-
+const Evaluation = require("../models/evaluation");
 /* récupérer un  label  /Il faut comme argument
 * un _id 
 
@@ -27,10 +28,16 @@ router.post("/updateevalformat", async (req, res) => {
   console.log("/updateevalformat",evaluationFormatId,evalFormat);
   if (evaluationFormatId && evalFormat) {
     try {
-      await EvaluationFormat.findByIdAndUpdate(evaluationFormatId, {
+      const Eval = await Eval.find({format : evaluationFormatId});
+      console.log(Eval)
+      const EvaluationFormat = await EvaluationFormat.findByIdAndUpdate(evaluationFormatId, {
         factors: evalFormat.factors,
         name: evalFormat.name,
       });
+      if( evalFormat.factors.size()>Eval.grades.size()){
+        console.log("rétrécrir")
+      }
+      console.log(EvaluationFormat);
       res.status(202).json();
     } catch (error) {
       console.log("error trying to update sprint, error:");
