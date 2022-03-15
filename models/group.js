@@ -9,7 +9,8 @@ const groupSchema = new Schema({
   studentBonusPoints: [Number],
   evaluation: mongoose.Types.ObjectId,
   labelFormat: mongoose.Types.ObjectId,
-  schoolYear: mongoose.Types.ObjectId
+  schoolYear: mongoose.Types.ObjectId,
+  name: String
 });
 groupSchema.post("validate", async (result) => {
   if (!("schoolYear" in result) || result.schoolYear == null) {

@@ -15,6 +15,11 @@ const DEFAULT_LABELS = [
   "BUILD/CI",
 ];
 
+const DEFAULT_GROUP_NAME = "Sans Nom";
+const NAME_MIN_LENGTH = 2;
+const NAME_MAX_LENGTH = 32;
+
+
 /** Group creation
  * 
  * @param managerId manager/teacher of group
@@ -24,7 +29,7 @@ const DEFAULT_LABELS = [
  */
 router.post("/create", async (req, res, next) => {
   console.log("group/create");
-  const { managerId, students, evaluationFormatId, labelFormatId } = req.body;
+  const { managerId, students, evaluationFormatId, labelFormatId, name } = req.body;
   // validation of string parameters
   if (managerId && typeof(managerId) == "string"
       && evaluationFormatId && typeof(evaluationFormatId) == "string"
@@ -51,6 +56,15 @@ router.post("/create", async (req, res, next) => {
               format: evaluationFormatId,
               grades
             });
+            let constructedName = name;
+            if (!name && students && Array.isArray(students) && students.length > 0) {
+              constructedName = "";
+              for (let studentId of students) {
+                let student = await User.findById(studentId);
+                if (student.firstname.length > 1) constructedName += student.firstname.substring(0, 2) + ".";
+              }
+              console.log("constructed name for group: " + constructedName);
+            }
             const group = await Group.create({
               manager: managerId,
               students: students ? students : [],
@@ -58,6 +72,7 @@ router.post("/create", async (req, res, next) => {
               studentBonusPoints: [],
               evaluation,
               labelFormat: labelFormatId,
+              name: constructedName || DEFAULT_GROUP_NAME
             });
             res.status(202).json(group);
           } catch (err) {
@@ -286,6 +301,32 @@ router.put("/updatelabelformat", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(400).end();
+  }
+});
+
+/** Update name
+ * 
+ * @param groupId
+ * @param name
+ */
+router.put("/updatename", async (req, res) => {
+  let { groupId, name } = req.body;
+  if (!(name && typeof(name) == "string" && name.length >= NAME_MIN_LENGTH && name.length <= NAME_MAX_LENGTH)) {
+    res.status(400).end();
+  } else {
+    try {
+      let group = await Group.findByIdAndUpdate(groupId, {
+        name: name
+      },
+      // options
+      {
+        new: true
+      });
+      res.status(201).json(group);
+    } catch (error) {
+      console.error(error);
+      res.status(400).end();
+    }
   }
 });
 
