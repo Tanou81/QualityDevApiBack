@@ -57,14 +57,15 @@ router.post("/create", async (req, res, next) => {
               grades
             });
             let constructedName = name;
-            if (!name && students && Array.isArray(students) && students.length > 0) {
+            if (!constructedName && students && Array.isArray(students) && students.length > 0) {
               constructedName = "";
               for (let studentId of students) {
                 let student = await User.findById(studentId);
                 if (student.firstname.length > 1) constructedName += student.firstname.substring(0, 2) + ".";
               }
-              console.log("constructed name for group: " + constructedName);
             }
+            if (constructedName.length < 2) constructedName = DEFAULT_GROUP_NAME;
+            console.log("constructed name for group: " + constructedName);
             const group = await Group.create({
               manager: managerId,
               students: students ? students : [],
@@ -72,7 +73,7 @@ router.post("/create", async (req, res, next) => {
               studentBonusPoints: [],
               evaluation,
               labelFormat: labelFormatId,
-              name: constructedName || DEFAULT_GROUP_NAME
+              name: constructedName
             });
             res.status(202).json(group);
           } catch (err) {
