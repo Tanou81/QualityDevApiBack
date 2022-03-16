@@ -294,7 +294,7 @@ router.put("/updatelabelformat", async (req, res) => {
   const session = await startSession();
   session.startTransaction();
   try {
-    let newlabelFormat = LabelFormat.findById(labelFormatId);
+    let newlabelFormat = await LabelFormat.findById(labelFormatId);
     let group = await Group.findById(groupId);
     let newGroup = null;
     // If any sprint is not of required length, delete all sprints and create new ones
@@ -307,7 +307,11 @@ router.put("/updatelabelformat", async (req, res) => {
     };
 
     if (await asyncSome(group.sprints, async (sprintId) => {
-      let sprint = Sprint.findById(sprintId);
+      let sprint = await Sprint.findById(sprintId);
+      console.log("sprints.ratings");
+      console.log(sprint);
+      console.log("newlabelFormat.labels");
+      console.log(newlabelFormat);
       return sprint.ratings.length !== newlabelFormat.labels.length;
     })) {
         let newSprintsArray = [];
