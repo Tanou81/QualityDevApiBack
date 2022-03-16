@@ -3,6 +3,8 @@ const Group = require("../models/group");
 const Sprint = require("../models/sprint");
 const LabelFormat = require("../models/labelformat");
 
+// Create
+
 /** Sprint creation
  * 
  * @description By default put values to either 0 or copy last sprint values
@@ -60,11 +62,13 @@ router.post("/create", async (req, res) => {
   res.status(402).end();
 });
 
+// Delete
 
 /** Delete one sprint and update its group
  * 
  * @param groupId
  * @param sprintId
+ * @todo migrate to .delete request
  */
 router.post("/delete", async (req, res) => {
   const { groupId, sprintId } = req.body;
@@ -84,10 +88,13 @@ router.post("/delete", async (req, res) => {
   res.status(402).end();
 });
 
+// Update
+
 /** Update one sprint
  * 
  * @deprecated use /update
  * @returns updated sprint if updated
+ * @todo migrate to .put request
  */
 router.post("/updatesprint", async (req, res) => {
   console.log("/updatesprint");
@@ -115,8 +122,11 @@ router.post("/updatesprint", async (req, res) => {
 
 /** Update one sprint
  * 
+ * @param sprintId
+ * @param sprint
  * @description Duplicate of /updatesprint
  * @returns updated sprint if updated
+ * @todo migrate to .put request
  */
  router.post("/update", async (req, res) => {
   console.log("/update");
@@ -190,7 +200,46 @@ router.put("/updatecomment", async (req, res) => {
   res.status(402).end();
 });
 
-// GETTERS
+/** Update field doSend
+ * 
+ * @param _id
+ * @param doSend
+ */
+router.put("/updatedosend", async (req, res) => {
+  console.log("/updatedosend");
+  const { _id, doSend } = req.body;
+  try {
+    let sprint = await Sprint.findByIdAndUpdate(_id, {
+      doSend
+    });
+    res.status(200).json(sprint);
+  } catch (error) {
+    console.error(error);
+    res.status(400).end();
+  }
+});
+
+/** Update group
+ * 
+ * @param _id
+ * @param group
+ */
+ router.put("/updategroup", async (req, res) => {
+  console.log("/updategroup");
+  const { _id, group } = req.body;
+  try {
+    let sprint = await Sprint.findByIdAndUpdate(_id, {
+      group
+    });
+    res.status(200).json(sprint);
+  } catch (error) {
+    console.error(error);
+    res.status(400).end();
+  }
+});
+
+// GETTERS (Read)
+
 /** Get all sprints
  * 
  * 

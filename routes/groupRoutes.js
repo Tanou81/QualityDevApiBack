@@ -5,22 +5,15 @@ const Evaluation = require("../models/evaluation");
 const EvaluationFormat = require("../models/evaluationformats");
 const LabelFormat = require("../models/labelformat");
 const Sprint = require("../models/sprint");
+const startSession = require("mongoose").startSession;
 
 const chartFromGroup = require("../services/chartServices").chartFromGroup;
-
-const DEFAULT_LABELS = [
-  "TASKS",
-  "ISSUES",
-  "RELEASES",
-  "DOCUMENTATION",
-  "TESTS",
-  "BUILD/CI",
-];
 
 const DEFAULT_GROUP_NAME = "Sans Nom";
 const NAME_MIN_LENGTH = 2;
 const NAME_MAX_LENGTH = 32;
 
+// Create
 
 /** Group creation
  * 
@@ -90,6 +83,8 @@ router.post("/create", async (req, res, next) => {
         return;
       }
 });
+
+// Delete
 
 /** Delete one group and update its Evaluation
  * 
@@ -186,10 +181,13 @@ router.put("/changelabels", async (req, res) => {
   res.status(402).end();
 });
 
+// Update
+
 /** Add student(s) to group
  * 
  * @param groupId
  * @param students an array of student ids
+ * @todo migrate this request as a .put
  */
 router.post("/addstudents", async (req, res) => {
   const { groupId, students } = req.body;
@@ -213,6 +211,7 @@ router.post("/addstudents", async (req, res) => {
  * 
  * @param groupId
  * @param students an array of student ids
+ * @todo migrate this request as a .put
  */
 router.post("/removestudents", async (req, res) => {
   const { groupId, students } = req.body;
@@ -292,6 +291,8 @@ router.put("/updatestudents", async (req, res) => {
  */
 router.put("/updatelabelformat", async (req, res) => {
   let { groupId, labelFormatId } = req.body;
+  const session = await startSession();
+  session.startTransaction();
   try {
     let newlabelFormat = LabelFormat.findById(labelFormatId);
     let group = await Group.findById(groupId);
@@ -341,8 +342,11 @@ router.put("/updatelabelformat", async (req, res) => {
       }
     res.status(201).json(newGroup);
   } catch (error) {
+    session.abortTransaction();
     console.error(error);
     res.status(400).end();
+  } finally {
+    session.endSession();
   }
 });
 
@@ -405,7 +409,30 @@ router.put("/updateevaluationformat", async (req, res) => {
   }
 });
 
-// GETTERS
+router.put("/updateschoolyear", async (req, res) => {
+  const { _id, schoolYear } = req.body;
+  try {
+    let group = await Group.findByIdAndUpdate(_id, {
+      schoolYear
+    });
+    res.status(200).json(group);
+  } catch (error) {
+    console.error(error);
+    res.status(400).end();
+  }
+});
+
+/** Update studentBonusPoints
+ * 
+ * @description The field is used to compute individual grades for students
+ * each student "gives" a point to another student of the group
+ * the sum of point for a given student could
+ * increase his grade up to 1 point (2 points ?)
+ * @todo implement
+ */
+
+// GETTERS (Read)
+
 /** Get all groups
  * 
  * 
@@ -474,6 +501,13 @@ router.get("/getgraphbyid", async (req, res) => {
     console.error(error);
     res.status(400).end();
   }
-})
+});
+
+/**
+ * @todo Could implement some requests with filter such as
+ * - "getgroupsbylabelformat"
+ * - "getgroupsbymanager"
+ * - "getgroupsbyname" (name not being a identifier/key)
+ */
 
 module.exports = router;
