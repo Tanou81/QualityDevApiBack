@@ -3,6 +3,8 @@ const Group = require("../models/group");
 const User = require("../models/user");
 const Evaluation = require("../models/evaluation");
 const EvaluationFormat = require("../models/evaluationformats");
+const LabelFormat = require("../models/labelformat");
+const Sprint = require("../models/sprint");
 
 const chartFromGroup = require("../services/chartServices").chartFromGroup;
 
@@ -291,14 +293,53 @@ router.put("/updatestudents", async (req, res) => {
 router.put("/updatelabelformat", async (req, res) => {
   let { groupId, labelFormatId } = req.body;
   try {
-    let group = await Group.findByIdAndUpdate(groupId, {
-      labelFormat: labelFormatId
-    },
-    // options
-    {
-      new: true
-    });
-    res.status(201).json(group);
+    let newlabelFormat = LabelFormat.findById(labelFormatId);
+    let group = await Group.findById(groupId);
+    let newGroup = null;
+    // If any sprint is not of required length, delete all sprints and create new ones
+    // asyncSome form https://advancedweb.hu/how-to-use-async-functions-with-array-some-and-every-in-javascript/
+    const asyncSome = async (arr, predicate) => {
+      for (let e of arr) {
+        if (await predicate(e)) return true;
+      }
+      return false;
+    };
+
+    if (await asyncSome(group.sprints, async (sprintId) => {
+      let sprint = Sprint.findById(sprintId);
+      return sprint.ratings.length !== newlabelFormat.labels.length;
+    })) {
+        let newSprintsArray = [];
+        for (let i = 0; i < newlabelFormat.weeks; i++) {
+          let sprint = await Sprint.create({
+            comment: "",
+            ratings: Array.from({length: newlabelFormat.labels.length}, () => {return 0}),
+            doSend: false,
+            group: groupId
+          });
+          newSprintsArray.push(sprint._id);
+        }
+        console.log("/updatelabelformat, creating new sprints:");
+        console.log(newSprintsArray);
+        newGroup = await Group.findByIdAndUpdate(groupId, {
+          labelFormat: labelFormatId,
+          sprints: newSprintsArray
+        },
+        // options
+        {
+          new: true
+        });
+      } else {
+        // if all sprints are of required length, no need to change anything
+        newGroup = await Group.findByIdAndUpdate(groupId, {
+          labelFormat: labelFormatId
+        },
+        // options
+        {
+          new: true
+        });
+      }
+    res.status(201).json(newGroup);
   } catch (error) {
     console.error(error);
     res.status(400).end();
@@ -328,6 +369,39 @@ router.put("/updatename", async (req, res) => {
       console.error(error);
       res.status(400).end();
     }
+  }
+});
+
+/** Update evaluation Format
+ * 
+ * @param groupId
+ * @param evaluationFormatId
+ */
+router.put("/updateevaluationformat", async (req, res) => {
+  let { groupId, evaluationFormatId } = req.body;
+  try {
+    let group = await Group.findById(groupId);
+    let evaluation = await Evaluation.findById(group.evaluation);
+    let newEvaluationFormat = await EvaluationFormat.findById(evaluationFormatId);
+    // if "grades" field length is not of required new length, replace it by a new array
+    if (evaluation.grades.length !== newEvaluationFormat.factors.length) {
+      let array = newEvaluationFormat.factors.map((factor) => {
+        return 0;
+      });
+      let updatedEvaluation = await Evaluation.findByIdAndUpdate(group.evaluation, {
+        format: evaluationFormatId,
+        grades: array
+      });
+    } else {
+      let updatedEvaluation = await Evaluation.findByIdAndUpdate(group.evaluation, {
+        format: evaluationFormatId
+      });
+    }
+    // Sending group back, only evaluation object changed
+    res.status(201).json(group);
+  } catch (error) {
+    console.error(error);
+    res.status(400).end();
   }
 });
 
