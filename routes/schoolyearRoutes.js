@@ -2,6 +2,7 @@ const router = require("express").Router();
 const SchoolYear = require("../models/schoolyear");
 
 // Create
+
 /** Create a school year
  * 
  * @param name
@@ -24,7 +25,8 @@ router.post("/create", async (req, res) => {
   res.status(400).end();
 });
 
-// Read / Getter
+// Getters (Read)
+
 /** Get all school years
  * 
  * 
@@ -76,11 +78,63 @@ router.get("/getAllStartingByYear", async (req, res) => {
 });
 
 // Update
-router.put("/updatename", async (req, res) => {
+
+/** Update name
+ * 
+ * @param _id
+ * @param name
+ */
+ router.put("/updatename", async (req, res) => {
   let { _id, name } = req.body;
   try {
     let schoolYear = await SchoolYear.findByIdAndUpdate(_id, {
       name
+    },
+    // options
+    {
+      new: true
+    });
+    res.status(201).json(schoolYear);
+  } catch (error) {
+    console.error(error);
+    res.status(400).end();
+  }
+  res.status(400).end();
+});
+
+/** Update startYear
+ * 
+ * @param _id
+ * @param startYear
+ */
+router.put("/updatestartyear", async (req, res) => {
+  let { _id, startYear } = req.body;
+  try {
+    let schoolYear = await SchoolYear.findByIdAndUpdate(_id, {
+      startYear
+    },
+    // options
+    {
+      new: true
+    });
+    res.status(201).json(schoolYear);
+  } catch (error) {
+    console.error(error);
+    res.status(400).end();
+  }
+  res.status(400).end();
+});
+
+/** Update endYear
+ * 
+ * @param _id
+ * @param endYear
+ */
+router.put("/updateendyear", async (req, res) => {
+  let { _id, endYear } = req.body;
+  try {
+    let schoolYear = await SchoolYear.findByIdAndUpdate(_id, {
+      endYear
     },
     // options
     {

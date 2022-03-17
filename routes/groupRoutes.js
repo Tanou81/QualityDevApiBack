@@ -3,22 +3,17 @@ const Group = require("../models/group");
 const User = require("../models/user");
 const Evaluation = require("../models/evaluation");
 const EvaluationFormat = require("../models/evaluationformats");
+const LabelFormat = require("../models/labelformat");
+const Sprint = require("../models/sprint");
+const startSession = require("mongoose").startSession;
 
 const chartFromGroup = require("../services/chartServices").chartFromGroup;
-
-const DEFAULT_LABELS = [
-  "TASKS",
-  "ISSUES",
-  "RELEASES",
-  "DOCUMENTATION",
-  "TESTS",
-  "BUILD/CI",
-];
 
 const DEFAULT_GROUP_NAME = "Sans Nom";
 const NAME_MIN_LENGTH = 2;
 const NAME_MAX_LENGTH = 32;
 
+// Create
 
 /** Group creation
  * 
@@ -88,6 +83,8 @@ router.post("/create", async (req, res, next) => {
         return;
       }
 });
+
+// Delete
 
 /** Delete one group and update its Evaluation
  * 
@@ -184,10 +181,13 @@ router.put("/changelabels", async (req, res) => {
   res.status(402).end();
 });
 
+// Update
+
 /** Add student(s) to group
  * 
  * @param groupId
  * @param students an array of student ids
+ * @todo migrate this request as a .put
  */
 router.post("/addstudents", async (req, res) => {
   const { groupId, students } = req.body;
@@ -211,6 +211,7 @@ router.post("/addstudents", async (req, res) => {
  * 
  * @param groupId
  * @param students an array of student ids
+ * @todo migrate this request as a .put
  */
 router.post("/removestudents", async (req, res) => {
   const { groupId, students } = req.body;
@@ -290,18 +291,66 @@ router.put("/updatestudents", async (req, res) => {
  */
 router.put("/updatelabelformat", async (req, res) => {
   let { groupId, labelFormatId } = req.body;
+  const session = await startSession();
+  session.startTransaction();
   try {
-    let group = await Group.findByIdAndUpdate(groupId, {
-      labelFormat: labelFormatId
-    },
-    // options
-    {
-      new: true
-    });
-    res.status(201).json(group);
+    let newlabelFormat = await LabelFormat.findById(labelFormatId);
+    let group = await Group.findById(groupId);
+    let newGroup = null;
+    // If any sprint is not of required length, delete all sprints and create new ones
+    // asyncSome form https://advancedweb.hu/how-to-use-async-functions-with-array-some-and-every-in-javascript/
+    const asyncSome = async (arr, predicate) => {
+      for (let e of arr) {
+        if (await predicate(e)) return true;
+      }
+      return false;
+    };
+
+    if (await asyncSome(group.sprints, async (sprintId) => {
+      let sprint = await Sprint.findById(sprintId);
+      console.log("sprints.ratings");
+      console.log(sprint);
+      console.log("newlabelFormat.labels");
+      console.log(newlabelFormat);
+      return sprint.ratings.length !== newlabelFormat.labels.length;
+    })) {
+        let newSprintsArray = [];
+        for (let i = 0; i < newlabelFormat.weeks; i++) {
+          let sprint = await Sprint.create({
+            comment: "",
+            ratings: Array.from({length: newlabelFormat.labels.length}, () => {return 0}),
+            doSend: false,
+            group: groupId
+          });
+          newSprintsArray.push(sprint._id);
+        }
+        console.log("/updatelabelformat, creating new sprints:");
+        console.log(newSprintsArray);
+        newGroup = await Group.findByIdAndUpdate(groupId, {
+          labelFormat: labelFormatId,
+          sprints: newSprintsArray
+        },
+        // options
+        {
+          new: true
+        });
+      } else {
+        // if all sprints are of required length, no need to change anything
+        newGroup = await Group.findByIdAndUpdate(groupId, {
+          labelFormat: labelFormatId
+        },
+        // options
+        {
+          new: true
+        });
+      }
+    res.status(201).json(newGroup);
   } catch (error) {
+    session.abortTransaction();
     console.error(error);
     res.status(400).end();
+  } finally {
+    session.endSession();
   }
 });
 
@@ -331,7 +380,63 @@ router.put("/updatename", async (req, res) => {
   }
 });
 
-// GETTERS
+/** Update evaluation Format
+ * 
+ * @param groupId
+ * @param evaluationFormatId
+ */
+router.put("/updateevaluationformat", async (req, res) => {
+  let { groupId, evaluationFormatId } = req.body;
+  try {
+    let group = await Group.findById(groupId);
+    let evaluation = await Evaluation.findById(group.evaluation);
+    let newEvaluationFormat = await EvaluationFormat.findById(evaluationFormatId);
+    // if "grades" field length is not of required new length, replace it by a new array
+    if (evaluation.grades.length !== newEvaluationFormat.factors.length) {
+      let array = newEvaluationFormat.factors.map((factor) => {
+        return 0;
+      });
+      let updatedEvaluation = await Evaluation.findByIdAndUpdate(group.evaluation, {
+        format: evaluationFormatId,
+        grades: array
+      });
+    } else {
+      let updatedEvaluation = await Evaluation.findByIdAndUpdate(group.evaluation, {
+        format: evaluationFormatId
+      });
+    }
+    // Sending group back, only evaluation object changed
+    res.status(201).json(group);
+  } catch (error) {
+    console.error(error);
+    res.status(400).end();
+  }
+});
+
+router.put("/updateschoolyear", async (req, res) => {
+  const { _id, schoolYear } = req.body;
+  try {
+    let group = await Group.findByIdAndUpdate(_id, {
+      schoolYear
+    });
+    res.status(200).json(group);
+  } catch (error) {
+    console.error(error);
+    res.status(400).end();
+  }
+});
+
+/** Update studentBonusPoints
+ * 
+ * @description The field is used to compute individual grades for students
+ * each student "gives" a point to another student of the group
+ * the sum of point for a given student could
+ * increase his grade up to 1 point (2 points ?)
+ * @todo implement
+ */
+
+// GETTERS (Read)
+
 /** Get all groups
  * 
  * 
@@ -400,6 +505,13 @@ router.get("/getgraphbyid", async (req, res) => {
     console.error(error);
     res.status(400).end();
   }
-})
+});
+
+/**
+ * @todo Could implement some requests with filter such as
+ * - "getgroupsbylabelformat"
+ * - "getgroupsbymanager"
+ * - "getgroupsbyname" (name not being a identifier/key)
+ */
 
 module.exports = router;

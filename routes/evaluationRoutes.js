@@ -4,7 +4,9 @@ const EvaluationFormat = require("../models/evaluationformats");
 const Group = require("../models/group");
 
 // Create
+
 /** Create evaluation
+ * 
  * 
  * @param evaluationFormatId
  * @param grades optional array of grades [int]
@@ -29,7 +31,8 @@ router.post("/create", async (req, res) => {
   res.status(400).end();
 });
 
-// GETTERS
+// GETTERS (Read)
+
 /** Get all evaluation
  * 
  * 
@@ -65,6 +68,7 @@ router.get("/getevaluationbyid", async (req, res) => {
 });
 
 // UPDATE
+
 /** Update evaluation format
  * 
  * @description BE CAUTIOUS: updating to a new
@@ -161,6 +165,8 @@ router.put("/updategradeatindex", async (req, res) => {
   }
 });
 
+// Delete
+
 /** Delete one evaluation
  * 
  * @description Safe delete: if evaluation is referenced
@@ -205,8 +211,6 @@ router.delete("/deleteforce", async (req, res) =>{
     res.status(400).end()
   }
 });
-
-
 
 /** Update evaluation (??)
  * 

@@ -1,7 +1,11 @@
 const router = require("express").Router();
 const LabelFormat = require("../models/labelformat");
+const Group = require("../models/group");
+const Sprint = require("../models/sprint");
+const startSession = require("mongoose").startSession;
 
 // CREATE
+
 /** Create a label format
  * 
  * @param name should not be already used for another labelFormat
@@ -35,7 +39,8 @@ router.post("/create", async (req, res) => {
 });
 
 
-// GETTERS
+// GETTERS (READ)
+
 /** Get all labelFormats
  * 
  * 
@@ -69,6 +74,7 @@ router.get("/getlabelformatbyid", async (req, res) => {
     }
 });
 
+// Update
 
 /** Update labelFormat name 
  * 
@@ -120,37 +126,67 @@ router.put("/updateweeks", async (req, res) => {
     }
 });
 
-// TODO
 /** Update labelFormat labels 
  * 
  * @param labels an array of object
  * with field label(String) and maxValue(Number)
+ * @todo currently it is not implemented in a restrictive way
+ * but you may want to ensure that values stored in sprint ratings
+ * do not exceed future "label" maxValue
  */
-/*
 router.put("/updatelabels", async (req, res) => {
-    let { _id, name } = req.body;
-    if (name && typeof(name) == "string") {
-        try {
-            let occurence = await LabelFormat.count({
-                name
-            });
-            if (occurence > 0)
-                throw "LabelFormat with same name already existing";
-            let labelFormat = await LabelFormat.findOneAndUpdate(_id, {
-                name
-            },
-            // options
-            {
-                new: true
-            });
-            res.status(201).json(labelFormat);
-        } catch (error) {
-            console.error(error);
-            res.status(400).end();
+    let { _id, labels } = req.body;
+    let session = await startSession();
+    session.startTransaction();
+    try {
+        let labelFormat = await LabelFormat.findById(_id);
+        let groupsUsingLabelFormat = await Group.find({labelFormat: _id});
+        // If any existing sprint of a given group has ratings of different size than @param labels
+        // we write over the 'ratings' field of the given sprint
+        for (let group of groupsUsingLabelFormat) {
+            for (let sprintId of group.sprints) {
+                let sprint = await Sprint.findById(sprintId);
+                if (sprint.ratings.length !== labels.length) {
+                    let array = Array.from({length: labels.length}, () => { return 0; });
+                    let newSprint = await Sprint.findByIdAndUpdate(sprintId, {
+                        ratings: array
+                    }, { new: true });
+                }
+            }
         }
+        let newLabelFormat = await LabelFormat.findByIdAndUpdate(_id, {
+            labels
+        });
+        res.status(200).json(newLabelFormat);
+    } catch (error) {
+        session.abortTransaction();
+        console.error(error);
+        res.status(400).end();
+    } finally {
+        session.endSession();
     }
     res.status(400).end();
 });
-*/
+
+// Delete
+
+/** Delete a labelFormat using his id
+ * 
+ * @param _id
+ */
+router.delete("/delete", async (req, res) => {
+    console.log("/delete");
+    const { _id } = req.body;
+    try {
+        let groupsUsingLabelFormat = await Group.find({labelFormat: _id});
+        if (Array.isArray(groupsUsingLabelFormat) && groupsUsingLabelFormat.length > 0)
+            throw new Error("Trying to delete labelFormat is use in certains groups");
+        let deletedLabelFormat = await LabelFormat.findByIdAndDelete(_id);
+        res.status(200).json(deletedLabelFormat);
+    } catch (error) {
+        console.error(error);
+        res.status(400).end();
+    }
+});
 
 module.exports = router;

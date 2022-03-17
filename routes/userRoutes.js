@@ -1,8 +1,7 @@
 const router = require("express").Router();
-//on appel les modèles pour vérif 
 const User = require("../models/user");
 
-// CREATION DELETION
+// CREATION
 
 /**
  * Student creation
@@ -105,6 +104,7 @@ router.delete("/deletebyemail", async (req, res) => {
 /** Delete multiple users by id
  * 
  * @param idArray an array containing id of users to be deleted
+ * @todo migrate this request as a .delete
  */
 router.post("/deletemultiple", async (req, res) => {
   console.log("/deletemultiple");
@@ -121,8 +121,7 @@ router.post("/deletemultiple", async (req, res) => {
   }
 });
 
-// GETTERS
-// students
+// GETTERS (READ)
 
 /** Get all users
 *
@@ -196,7 +195,6 @@ router.get("/getstudentbyid", async (req, res) => {
   }
 });
 
-// teachers
 /** Get all teachers
 *
 *
@@ -210,7 +208,6 @@ router.get("/getallteachers", async (req, res) => {
   }
 });
 
-// teachers
 /** Get one techer using his email
 *
 * @param email
@@ -236,6 +233,89 @@ router.get("/getteacherbyid", async (req, res) => {
     const teacher = await User.findById({ userType: 1, _id });
     res.status(201).json(teacher);
   } catch (err) {
+    res.status(400).end();
+  }
+});
+
+// Update
+
+/** Update user email
+ * 
+ * @param _id
+ * @param email
+ */
+router.put("/updateemail", async (req, res) => {
+  console.log("/updateemail");
+  const { _id, email } = req.body;
+  try {
+    let usersUsingEmail = await User.find({ email });
+    if (Array.isArray(usersUsingEmail) && usersUsingEmail.length > 0){
+      console.error("User trying to update email already used");
+      res.status(409).end();
+    }
+    let user = await User.findByIdAndUpdate(_id, {
+      email
+    });
+    res.status(201).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(400).end();
+  }
+});
+
+/** Update user name
+ * 
+ * @param _id
+ * @param name
+ */
+router.put("/updatename", async (req, res) => {
+  console.log("/updatename");
+  const { _id, name } = req.body;
+  try {
+    let user = await User.findByIdAndUpdate(_id, {
+      name
+    });
+    res.status(201).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(400).end();
+  }
+});
+
+/** Update user firstname
+ * 
+ * @param _id
+ * @param firstname
+ */
+ router.put("/updatefirstname", async (req, res) => {
+  console.log("/updatefirstname");
+  const { _id, name } = req.body;
+  try {
+    let user = await User.findByIdAndUpdate(_id, {
+      firstname
+    });
+    res.status(201).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(400).end();
+  }
+});
+
+/** Update user userType
+ * 
+ * @param _id
+ * @param userType
+ */
+ router.put("/updateusertype", async (req, res) => {
+  console.log("/updatefirstname");
+  const { _id, userType } = req.body;
+  try {
+    let user = await User.findByIdAndUpdate(_id, {
+      userType
+    });
+    res.status(201).json(user);
+  } catch (error) {
+    console.error(error);
     res.status(400).end();
   }
 });
