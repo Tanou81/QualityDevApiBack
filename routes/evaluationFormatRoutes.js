@@ -81,12 +81,10 @@ router.get("/getEvaluationFormatById", async (req, res) => {
       const newGrades=[]
       // console.log("rétrécrir",Eval.length)
       for(i = 0; i<evalFormat.factors.length ;i++){
-        //console.log("rétrécrir",Eval[i].grades.length)
+        
         console.log(evalFormat.factors.length)
         newGrades.push(0)
-        // if (evalFormat.factors.length<Eval[i].grades.length){
-        //   newGrades = [evalFormat.factors.length]
-        // }
+      
       }
       for(i = 0; i<Eval.length ;i++){
         console.log("la",Eval[i]._id)
