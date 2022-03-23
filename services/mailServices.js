@@ -31,11 +31,11 @@ function sendMailTo(to, subject, htmlBody) {
         text: "", // plain text body
         html: htmlBody, // html body
     }).then(info => {
-        console.log("sucessefuly sent email")
+        console.log("sucessefuly sent email");
         console.log({info});
     }).catch( (error) => {
-        console.log("failed to send email, error:")
-        console.log(error);
+        console.log("failed to send email");
+        console.error(error);
     });
 }
 

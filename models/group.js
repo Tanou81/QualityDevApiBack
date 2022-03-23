@@ -14,16 +14,15 @@ const groupSchema = new Schema({
 });
 groupSchema.post("validate", async (result) => {
   if (!("schoolYear" in result) || result.schoolYear == null) {
-    console.log("ok");
     const todayDate = new Date();
     let schoolYear = {};
     if (todayDate.getMonth() >= 8) {
-      console.log(">=8");
+      console.log("Creating group for second part of year");
       schoolYear.startYear = `${todayDate.getFullYear()}`;
       schoolYear.endYear = `${todayDate.getFullYear() + 1}`;
       schoolYear.name = `${schoolYear.startYear}-${schoolYear.endYear}`;
     } else {
-      console.log("<8");
+      console.log("Creating group for first part of year");
       schoolYear.startYear = `${todayDate.getFullYear() - 1}`;
       schoolYear.endYear = `${todayDate.getFullYear()}`;
       schoolYear.name = `${schoolYear.startYear}-${schoolYear.endYear}`;  

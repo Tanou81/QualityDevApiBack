@@ -60,7 +60,7 @@ router.post("/create", async (req, res, next) => {
               }
             }
             if (constructedName.length < 2) constructedName = DEFAULT_GROUP_NAME;
-            console.log("constructed name for group: " + constructedName);
+            console.log(`constructed name for group: "${constructedName}`);
             const group = await Group.create({
               manager: managerId,
               students: students ? students : [],
@@ -99,14 +99,7 @@ router.delete("/delete", async (req, res) => {
   if (id && typeof(id) == "string" && id.length > 0) {
     try {
       const group = await Group.findById(id);
-      const groupDeleteSummary = await Group.deleteOne({_id: id});
-      // console.log("group");
-      // console.log(group);
-      // console.log("groupDeleteSummary");
-      // console.log(groupDeleteSummary);
       const evaluation = await Evaluation.deleteOne({_id: group.evaluation});
-      // console.log("evaluation deleted:");
-      // console.log(evaluation);
       res.status(200).json(groupDeleteSummary);
     } catch (err) {
       res.status(404).json({err: err});
@@ -262,11 +255,8 @@ router.put("/updatemanager", async (req, res) => {
  * @param students
  */
 router.put("/updatestudents", async (req, res) => {
+  console.log("group/updatestudents");
   let { groupId, students } = req.body;
-  console.log("groupId");
-  console.log(groupId);
-  console.log("students");
-  console.log(students);
   try {
     let group = await Group.findByIdAndUpdate(groupId, {
       students
@@ -275,8 +265,6 @@ router.put("/updatestudents", async (req, res) => {
     {
       new: true
     });
-    console.log("new group");
-    console.log(group);
     res.status(201).json(group);
   } catch (error) {
     console.error(error);
@@ -290,6 +278,7 @@ router.put("/updatestudents", async (req, res) => {
  * @param labelFormatId
  */
 router.put("/updatelabelformat", async (req, res) => {
+  console.log("/updatelabelformat");
   let { groupId, labelFormatId } = req.body;
   const session = await startSession();
   session.startTransaction();
@@ -308,10 +297,6 @@ router.put("/updatelabelformat", async (req, res) => {
 
     if (await asyncSome(group.sprints, async (sprintId) => {
       let sprint = await Sprint.findById(sprintId);
-      console.log("sprints.ratings");
-      console.log(sprint);
-      console.log("newlabelFormat.labels");
-      console.log(newlabelFormat);
       return sprint.ratings.length !== newlabelFormat.labels.length;
     })) {
         let newSprintsArray = [];
@@ -324,8 +309,6 @@ router.put("/updatelabelformat", async (req, res) => {
           });
           newSprintsArray.push(sprint._id);
         }
-        console.log("/updatelabelformat, creating new sprints:");
-        console.log(newSprintsArray);
         newGroup = await Group.findByIdAndUpdate(groupId, {
           labelFormat: labelFormatId,
           sprints: newSprintsArray
@@ -461,7 +444,6 @@ router.get("/getgroupbyid", async (req, res) => {
     let group = await Group.findById(_id);
     res.status(201).json(group);
   } catch (error) {
-    console.log("error");
     console.error(error);
     res.status(402).end();
   }
@@ -489,9 +471,9 @@ router.get("/getgroupsbyyear", async (req, res) => {
  * @param _id
  */
 router.get("/getgraphbyid", async (req, res) => {
+  console.log("/getgraphbyid");
   let { _id } = req.query;
   try {
-    console.log("getgraphbyid");
     let group = await Group.findById(_id);
     // res.status(201).render("<img src=" + (await chartFromGroup(group)) + "/>");
     img = await chartFromGroup(group);

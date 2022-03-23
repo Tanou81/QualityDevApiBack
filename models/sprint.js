@@ -18,7 +18,7 @@ const sprintSchema = new Schema({
 // we check if sprint summary should be sent
 sprintSchema.post("findOneAndUpdate", async (result) => {
   if (result && result.doSend) {
-    console.log(result.doSend);
+    console.log("DoSend sprint summary:", result.doSend);
     let group = await Group.findById(result.group);
     if (!group || !group.students) throw "group not found (sprintSchema.post-findOneAndUpdate)";
     group.students.forEach(async (studentId) => {

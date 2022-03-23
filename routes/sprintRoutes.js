@@ -40,8 +40,6 @@ router.post("/create", async (req, res) => {
         previous_ratings = new Array(ratingsLength).fill(0);
         previous_comment = "";
       }
-      console.log("RATINGS:");
-      console.log(previous_ratings);
       // Create sprint
       const new_sprint = await Sprint.create({
         comment: previous_comment,

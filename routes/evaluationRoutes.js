@@ -58,10 +58,8 @@ router.get("/getevaluationbyid", async (req, res) => {
     const evaluation = await Evaluation.findById(_id);
     if (evaluation) {
       res.status(201).json(evaluation);
-    } else throw "Could not find asked sprint";
+    } else throw new Error("Could not find asked sprint");
   } catch (error) {
-    console.log("error fetching specific sprint, error:");
-    console.log(error);
     console.error(error);
     res.status(402).end();
   }
@@ -229,8 +227,6 @@ router.delete("/deleteforce", async (req, res) =>{
         });
         res.status(202).json(evaluation);
       } catch (error) {
-        console.log("error trying to update sprint, error:");
-        console.log(error);
         console.error(error);
       }
     }

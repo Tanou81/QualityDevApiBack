@@ -60,9 +60,8 @@ router.get("/getalllabelformats", async (req, res) => {
  * @param _id
  */
 router.get("/getlabelformatbyid", async (req, res) => {
+    console.log("/getlabelformatbyid");
     let { _id } = req.query;
-    console.log("/getlabelformatbyid, id");
-    console.log(_id);
     try {
         const labelformat = await LabelFormat.findById(_id);
         if (labelformat) {
