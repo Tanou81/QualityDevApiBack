@@ -120,7 +120,7 @@ router.get("/getEvaluationFormatById", async (req, res) => {
  */
 router.post("/createevalFormat", async (req, res) => {
   const { name, factors } = req.body;
-  console.log("createevalFormat",name,factors)
+  console.log("/createevalFormat",name,factors)
   if (name && factors)
     try {
       const evalFormat = await EvaluationFormat.create({
@@ -136,53 +136,24 @@ router.post("/createevalFormat", async (req, res) => {
 
 // Delete
 
-/** Delete one evaluationFormat
- * 
- * @param _id
- * @todo clean
- */
- router.delete("/deleteevalFormat", async (req, res) => {
-  console.log("evalFormat/deleteevalFormat",req.body);
-  const { _id } = req.body;
-  //if (_id) id = _id;
-  if (_id) {
-    try {
-      const group = await EvaluationFormat.findById(_id);
-      const groupDeleteSummary = await EvaluationFormat.deleteOne({_id: _id});
-      console.log("group");
-      console.log(group);
-      console.log("groupDeleteSummary");
-      console.log(groupDeleteSummary);
-      // const evaluation = await Evaluation.deleteOne({_id: group.evaluation});
-      // console.log("evaluation deleted:");
-      // console.log(evaluation);
-      // res.status(200).json(groupDeleteSummary);
-    } catch (err) {
-      res.status(404).json({err: err});
-    }
-  } else {
-    res.status(400).json({err: "Id wrong format or too short"});
-  }
-});
-
-
 /** Delete one format
+ * 
+ * 
  * @param id
- * @deprecated
  */
- router.post("/delete", async (req, res) => {
+ router.delete("/delete", async (req, res) => {
+  console.log("/delete");
   const { _id } = req.body;
-  
-  //const { email } = req.body;
-  console.log("deleteevalFormat delete id : ",_id);
-  if (_id)
-    try {
-      await EvaluationFormat.deleteOne({ _id });
-      res.status(201).end();
-    } catch (err) {
+  try {
+      let evaluationsUsingFormat = await Evaluation.find({format: _id});
+      if (Array.isArray(evaluationsUsingFormat) && evaluationsUsingFormat.length > 0)
+          throw new Error("Trying to delete evaluationFormat in use in certains evaluations");
+      let deletedEvaluationFormat = await EvaluationFormat.findByIdAndDelete(_id);
+      res.status(200).json(deletedEvaluationFormat);
+  } catch (error) {
+      console.error(error);
       res.status(400).end();
-    }
-  res.status(400).end();
+  }
 });
 
 module.exports = router;

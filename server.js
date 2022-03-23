@@ -36,6 +36,7 @@ app.get("/", async (req, res) => {
 });
 
 // Connection to MongoDB via mongoose
+console.log(`Server pid is ${process.pid}`);
 console.log("Connecting to db");
 const MONGO_URI =
   process.env.MONGO_NEW_URI ||
